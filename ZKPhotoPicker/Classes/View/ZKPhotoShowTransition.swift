@@ -20,13 +20,18 @@ class ZKPhotoShowTransition: UIPercentDrivenInteractiveTransition, UIViewControl
     private var preCenter = CGPoint.zero
     func updateTempImage(vector: CGPoint) {
         
-        var scale = 1 - vector.y / 400
-        scale = min(scale, 1)
-        self.update(1 - scale)
+        var progress = vector.y / 400
+        progress = min(progress, 1)
+        progress = max(0, progress)
+        self.update(progress)
+        
+        var imgScale = 1 - vector.y / (max(self.imgvTemp.bounds.height , 400))
+        imgScale = min(imgScale, 1)
+        imgScale = max(0, imgScale)
         
         self.imgvTemp.center = self.preCenter + vector
-        self.imgvTemp.transform = .init(scaleX: scale, y: scale)
-        self.bgView.alpha = scale
+        self.imgvTemp.transform = .init(scaleX: imgScale, y: imgScale)
+        self.bgView.alpha = 1 - progress
     }
     
     func endGesTransform(finish: Bool, endFrame: CGRect) {

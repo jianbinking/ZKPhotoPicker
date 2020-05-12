@@ -53,8 +53,9 @@ class ZKPhotoShowContentViewController: UIViewController {
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(singleTap))
         self.view.addGestureRecognizer(tap)
         let double = UITapGestureRecognizer.init(target: self, action: #selector(doubleTap))
-        double.numberOfTouchesRequired = 2
+        double.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(double)
+        tap.require(toFail: double)
         
         self.assetManager.asset.zkFetchImage(targetSize: .zero, contentMode: .default, usePlaceholder: false) { (image, isPlaceholder, err) in
             if let image = image {
@@ -103,12 +104,14 @@ class ZKPhotoShowContentViewController: UIViewController {
     
     private func resizeImageView() {
         if let imgSize = self.imageView.image?.size {
+            self.scrollView.zoomScale = self.scrollView.minimumZoomScale
             let scale = max(imgSize.width / self.scrollView.bounds.width, imgSize.height / self.scrollView.bounds.height)
             var xoff = (self.scrollView.bounds.width - imgSize.width / scale) / 2
             var yoff = (self.scrollView.bounds.height - imgSize.height / scale) / 2
             xoff = max(xoff, 0)
             yoff = max(yoff, 0)
             self.imageView.frame = .init(x: xoff, y: yoff, width: imgSize.width / scale, height: imgSize.height / scale)
+            self.scrollView.maximumZoomScale = max(self.scrollView.bounds.width / self.imageView.frame.width, 2)
         }
     }
     
