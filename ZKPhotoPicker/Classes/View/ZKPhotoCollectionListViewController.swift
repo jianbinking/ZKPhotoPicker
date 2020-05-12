@@ -99,4 +99,13 @@ extension ZKPhotoCollectionListViewController: ZKPhotoShowDataSourceAndDelegate 
         return self.view.convert(cell.frame, from: self.collectionView)
     }
     
+    func pageVC(_ pageVC: ZKPhotoShowPageViewController, didScroll2Index idx: Int) {
+        if let topIndexPath = self.collectionView.indexPathsForVisibleItems.first, idx < topIndexPath.item {
+            self.collectionView.scrollToItem(at: .init(item: idx, section: 0), at: .top, animated: false)
+        }
+        else if let bottomIndexPath = self.collectionView.indexPathsForVisibleItems.last, idx > bottomIndexPath.item {
+            self.collectionView.scrollToItem(at: .init(item: idx, section: 0), at: .bottom, animated: false)
+        }
+    }
+    
 }

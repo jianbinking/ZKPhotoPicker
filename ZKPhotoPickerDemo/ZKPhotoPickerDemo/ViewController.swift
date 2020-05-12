@@ -8,7 +8,6 @@
 
 import UIKit
 import Photos
-import ZKPhotoPicker
 
 class ViewController: UIViewController {
 

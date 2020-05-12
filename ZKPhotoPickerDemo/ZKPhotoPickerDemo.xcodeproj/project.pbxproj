@@ -7,13 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		075706363201A394E09A8C1B /* Pods_ZKPhotoPickerDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93AFB22F0EC348A4A8973890 /* Pods_ZKPhotoPickerDemo.framework */; };
 		23302B62246A411B00FED654 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302B61246A411B00FED654 /* AppDelegate.swift */; };
 		23302B64246A411B00FED654 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302B63246A411B00FED654 /* SceneDelegate.swift */; };
 		23302B66246A411B00FED654 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302B65246A411B00FED654 /* ViewController.swift */; };
 		23302B69246A411B00FED654 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23302B67246A411B00FED654 /* Main.storyboard */; };
 		23302B6B246A411F00FED654 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23302B6A246A411F00FED654 /* Assets.xcassets */; };
 		23302B6E246A411F00FED654 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23302B6C246A411F00FED654 /* LaunchScreen.storyboard */; };
+		23302CA3246AB1DE00FED654 /* ZKPhotoCollectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C8F246AB1DE00FED654 /* ZKPhotoCollectionManager.swift */; };
+		23302CA4246AB1DE00FED654 /* ZKPhotoPickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C90246AB1DE00FED654 /* ZKPhotoPickerDelegate.swift */; };
+		23302CA5246AB1DE00FED654 /* ZKPhotoAssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C91246AB1DE00FED654 /* ZKPhotoAssetManager.swift */; };
+		23302CA6246AB1DE00FED654 /* ZKPhotoGroupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C92246AB1DE00FED654 /* ZKPhotoGroupManager.swift */; };
+		23302CA7246AB1DE00FED654 /* ZKPhotoCachingImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C93246AB1DE00FED654 /* ZKPhotoCachingImageManager.swift */; };
+		23302CA8246AB1DE00FED654 /* ZKConsts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C95246AB1DE00FED654 /* ZKConsts.swift */; };
+		23302CA9246AB1DE00FED654 /* ZKPhotoPickerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C96246AB1DE00FED654 /* ZKPhotoPickerConfig.swift */; };
+		23302CAA246AB1DE00FED654 /* ZKExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C97246AB1DE00FED654 /* ZKExtension.swift */; };
+		23302CAB246AB1DE00FED654 /* ZKPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C9A246AB1DE00FED654 /* ZKPhotoCollectionViewCell.swift */; };
+		23302CAC246AB1DE00FED654 /* ZKPhotoGroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C9B246AB1DE00FED654 /* ZKPhotoGroupTableViewCell.swift */; };
+		23302CAD246AB1DE00FED654 /* ZKPhotoShowTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C9C246AB1DE00FED654 /* ZKPhotoShowTransition.swift */; };
+		23302CAE246AB1DE00FED654 /* ZKPhotoGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C9D246AB1DE00FED654 /* ZKPhotoGroupViewController.swift */; };
+		23302CAF246AB1DE00FED654 /* ZKPhotoCollectionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C9E246AB1DE00FED654 /* ZKPhotoCollectionListViewController.swift */; };
+		23302CB0246AB1DE00FED654 /* ZKPhotoShowContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302C9F246AB1DE00FED654 /* ZKPhotoShowContentViewController.swift */; };
+		23302CB1246AB1DE00FED654 /* ZKPhotoShowPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302CA0246AB1DE00FED654 /* ZKPhotoShowPageViewController.swift */; };
+		23302CB2246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302CA1246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift */; };
+		23302CB3246AB1DE00FED654 /* ZKPhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302CA2246AB1DE00FED654 /* ZKPhotoPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,9 +41,23 @@
 		23302B6A246A411F00FED654 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		23302B6D246A411F00FED654 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		23302B6F246A411F00FED654 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3B2AEA7EA68F0135A1DA09E7 /* Pods-ZKPhotoPickerDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZKPhotoPickerDemo.debug.xcconfig"; path = "Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		93AFB22F0EC348A4A8973890 /* Pods_ZKPhotoPickerDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZKPhotoPickerDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9D5A72CA2D8B91037346A218 /* Pods-ZKPhotoPickerDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZKPhotoPickerDemo.release.xcconfig"; path = "Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo.release.xcconfig"; sourceTree = "<group>"; };
+		23302C8F246AB1DE00FED654 /* ZKPhotoCollectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoCollectionManager.swift; sourceTree = "<group>"; };
+		23302C90246AB1DE00FED654 /* ZKPhotoPickerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoPickerDelegate.swift; sourceTree = "<group>"; };
+		23302C91246AB1DE00FED654 /* ZKPhotoAssetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoAssetManager.swift; sourceTree = "<group>"; };
+		23302C92246AB1DE00FED654 /* ZKPhotoGroupManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoGroupManager.swift; sourceTree = "<group>"; };
+		23302C93246AB1DE00FED654 /* ZKPhotoCachingImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoCachingImageManager.swift; sourceTree = "<group>"; };
+		23302C95246AB1DE00FED654 /* ZKConsts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKConsts.swift; sourceTree = "<group>"; };
+		23302C96246AB1DE00FED654 /* ZKPhotoPickerConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoPickerConfig.swift; sourceTree = "<group>"; };
+		23302C97246AB1DE00FED654 /* ZKExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKExtension.swift; sourceTree = "<group>"; };
+		23302C9A246AB1DE00FED654 /* ZKPhotoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		23302C9B246AB1DE00FED654 /* ZKPhotoGroupTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoGroupTableViewCell.swift; sourceTree = "<group>"; };
+		23302C9C246AB1DE00FED654 /* ZKPhotoShowTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoShowTransition.swift; sourceTree = "<group>"; };
+		23302C9D246AB1DE00FED654 /* ZKPhotoGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoGroupViewController.swift; sourceTree = "<group>"; };
+		23302C9E246AB1DE00FED654 /* ZKPhotoCollectionListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoCollectionListViewController.swift; sourceTree = "<group>"; };
+		23302C9F246AB1DE00FED654 /* ZKPhotoShowContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoShowContentViewController.swift; sourceTree = "<group>"; };
+		23302CA0246AB1DE00FED654 /* ZKPhotoShowPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoShowPageViewController.swift; sourceTree = "<group>"; };
+		23302CA1246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoCollectionFlowLayout.swift; sourceTree = "<group>"; };
+		23302CA2246AB1DE00FED654 /* ZKPhotoPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoPicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,7 +65,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				075706363201A394E09A8C1B /* Pods_ZKPhotoPickerDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,9 +74,9 @@
 		23302B55246A411B00FED654 = {
 			isa = PBXGroup;
 			children = (
+				23302C8C246AB1DE00FED654 /* ZKPhotoPicker */,
 				23302B60246A411B00FED654 /* ZKPhotoPickerDemo */,
 				23302B5F246A411B00FED654 /* Products */,
-				77405EB45BAD6B80D17487C0 /* Pods */,
 				E931B3C458BDA6E4F69C200E /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -74,20 +103,74 @@
 			path = ZKPhotoPickerDemo;
 			sourceTree = "<group>";
 		};
-		77405EB45BAD6B80D17487C0 /* Pods */ = {
+		23302C8C246AB1DE00FED654 /* ZKPhotoPicker */ = {
 			isa = PBXGroup;
 			children = (
-				3B2AEA7EA68F0135A1DA09E7 /* Pods-ZKPhotoPickerDemo.debug.xcconfig */,
-				9D5A72CA2D8B91037346A218 /* Pods-ZKPhotoPickerDemo.release.xcconfig */,
+				23302C8D246AB1DE00FED654 /* Classes */,
 			);
-			name = Pods;
-			path = Pods;
+			name = ZKPhotoPicker;
+			path = ../ZKPhotoPicker;
+			sourceTree = "<group>";
+		};
+		23302C8D246AB1DE00FED654 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				23302C8E246AB1DE00FED654 /* Controller */,
+				23302C94246AB1DE00FED654 /* Model */,
+				23302C98246AB1DE00FED654 /* View */,
+				23302CA2246AB1DE00FED654 /* ZKPhotoPicker.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		23302C8E246AB1DE00FED654 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				23302C8F246AB1DE00FED654 /* ZKPhotoCollectionManager.swift */,
+				23302C90246AB1DE00FED654 /* ZKPhotoPickerDelegate.swift */,
+				23302C91246AB1DE00FED654 /* ZKPhotoAssetManager.swift */,
+				23302C92246AB1DE00FED654 /* ZKPhotoGroupManager.swift */,
+				23302C93246AB1DE00FED654 /* ZKPhotoCachingImageManager.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		23302C94246AB1DE00FED654 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				23302C95246AB1DE00FED654 /* ZKConsts.swift */,
+				23302C96246AB1DE00FED654 /* ZKPhotoPickerConfig.swift */,
+				23302C97246AB1DE00FED654 /* ZKExtension.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		23302C98246AB1DE00FED654 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				23302C99246AB1DE00FED654 /* cells */,
+				23302C9C246AB1DE00FED654 /* ZKPhotoShowTransition.swift */,
+				23302C9D246AB1DE00FED654 /* ZKPhotoGroupViewController.swift */,
+				23302C9E246AB1DE00FED654 /* ZKPhotoCollectionListViewController.swift */,
+				23302C9F246AB1DE00FED654 /* ZKPhotoShowContentViewController.swift */,
+				23302CA0246AB1DE00FED654 /* ZKPhotoShowPageViewController.swift */,
+				23302CA1246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		23302C99246AB1DE00FED654 /* cells */ = {
+			isa = PBXGroup;
+			children = (
+				23302C9A246AB1DE00FED654 /* ZKPhotoCollectionViewCell.swift */,
+				23302C9B246AB1DE00FED654 /* ZKPhotoGroupTableViewCell.swift */,
+			);
+			path = cells;
 			sourceTree = "<group>";
 		};
 		E931B3C458BDA6E4F69C200E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				93AFB22F0EC348A4A8973890 /* Pods_ZKPhotoPickerDemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -99,11 +182,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 23302B72246A411F00FED654 /* Build configuration list for PBXNativeTarget "ZKPhotoPickerDemo" */;
 			buildPhases = (
-				BC937F71DACAEF9CB1570499 /* [CP] Check Pods Manifest.lock */,
 				23302B5A246A411B00FED654 /* Sources */,
 				23302B5B246A411B00FED654 /* Frameworks */,
 				23302B5C246A411B00FED654 /* Resources */,
-				1ACE947118C594552F98BDED /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -160,56 +241,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		1ACE947118C594552F98BDED /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BC937F71DACAEF9CB1570499 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ZKPhotoPickerDemo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		23302B5A246A411B00FED654 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23302CA5246AB1DE00FED654 /* ZKPhotoAssetManager.swift in Sources */,
 				23302B66246A411B00FED654 /* ViewController.swift in Sources */,
+				23302CB2246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift in Sources */,
+				23302CAE246AB1DE00FED654 /* ZKPhotoGroupViewController.swift in Sources */,
+				23302CA7246AB1DE00FED654 /* ZKPhotoCachingImageManager.swift in Sources */,
 				23302B62246A411B00FED654 /* AppDelegate.swift in Sources */,
+				23302CAB246AB1DE00FED654 /* ZKPhotoCollectionViewCell.swift in Sources */,
+				23302CB3246AB1DE00FED654 /* ZKPhotoPicker.swift in Sources */,
+				23302CB0246AB1DE00FED654 /* ZKPhotoShowContentViewController.swift in Sources */,
+				23302CAA246AB1DE00FED654 /* ZKExtension.swift in Sources */,
+				23302CA4246AB1DE00FED654 /* ZKPhotoPickerDelegate.swift in Sources */,
+				23302CA8246AB1DE00FED654 /* ZKConsts.swift in Sources */,
 				23302B64246A411B00FED654 /* SceneDelegate.swift in Sources */,
+				23302CAF246AB1DE00FED654 /* ZKPhotoCollectionListViewController.swift in Sources */,
+				23302CAD246AB1DE00FED654 /* ZKPhotoShowTransition.swift in Sources */,
+				23302CA3246AB1DE00FED654 /* ZKPhotoCollectionManager.swift in Sources */,
+				23302CB1246AB1DE00FED654 /* ZKPhotoShowPageViewController.swift in Sources */,
+				23302CA6246AB1DE00FED654 /* ZKPhotoGroupManager.swift in Sources */,
+				23302CA9246AB1DE00FED654 /* ZKPhotoPickerConfig.swift in Sources */,
+				23302CAC246AB1DE00FED654 /* ZKPhotoGroupTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,7 +407,6 @@
 		};
 		23302B73246A411F00FED654 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B2AEA7EA68F0135A1DA09E7 /* Pods-ZKPhotoPickerDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -370,7 +425,6 @@
 		};
 		23302B74246A411F00FED654 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9D5A72CA2D8B91037346A218 /* Pods-ZKPhotoPickerDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
