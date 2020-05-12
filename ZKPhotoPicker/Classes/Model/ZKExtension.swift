@@ -75,6 +75,13 @@ public extension PHAsset {
         }
     }
     
+    /// OC获取图片（异步，因为oc不支持Error对象，所以套一层NSError）
+    /// - Parameters:
+    ///   - targetSize: 目标大小
+    ///   - contentMode: contentMode
+    ///   - usePlaceholder: 是否使用placeHolder（默认是，会先调用block返回默认图）
+    ///   - deliveryMode: 加载模式，默认多次加载
+    ///   - completeHandle: 成功回调（图片，是否是缩略图，错误）
     @objc func zkOCFetchImage(targetSize: CGSize,
                         contentMode: PHImageContentMode,
                         usePlaceholder: Bool = true,
@@ -90,6 +97,13 @@ public extension PHAsset {
         })
     }
     
+    /// swift获取图片（异步）
+    /// - Parameters:
+    ///   - targetSize: 目标大小
+    ///   - contentMode: contentMode
+    ///   - usePlaceholder: 是否使用placeHolder（默认是，会先调用block返回默认图）
+    ///   - deliveryMode: 加载模式，默认多次加载
+    ///   - completeHandle: 成功回调（图片，是否是缩略图，错误）   
     func zkFetchImage(targetSize: CGSize,
                       contentMode: PHImageContentMode,
                       usePlaceholder: Bool = true,

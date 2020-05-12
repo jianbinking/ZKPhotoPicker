@@ -58,6 +58,7 @@
 		23302CA0246AB1DE00FED654 /* ZKPhotoShowPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoShowPageViewController.swift; sourceTree = "<group>"; };
 		23302CA1246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoCollectionFlowLayout.swift; sourceTree = "<group>"; };
 		23302CA2246AB1DE00FED654 /* ZKPhotoPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoPicker.swift; sourceTree = "<group>"; };
+		D19B8FF0246AF338006C0C2D /* ZKPhotoPickerDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ZKPhotoPickerDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +100,7 @@
 				23302B6A246A411F00FED654 /* Assets.xcassets */,
 				23302B6C246A411F00FED654 /* LaunchScreen.storyboard */,
 				23302B6F246A411F00FED654 /* Info.plist */,
+				D19B8FF0246AF338006C0C2D /* ZKPhotoPickerDemo-Bridging-Header.h */,
 			);
 			path = ZKPhotoPickerDemo;
 			sourceTree = "<group>";
@@ -207,6 +209,7 @@
 				TargetAttributes = {
 					23302B5D246A411B00FED654 = {
 						CreatedOnToolsVersion = 11.3;
+						LastSwiftMigration = 1140;
 					};
 				};
 			};
@@ -409,6 +412,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X78BX3WNP2;
 				INFOPLIST_FILE = ZKPhotoPickerDemo/Info.plist;
@@ -418,6 +422,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.buydeem.ZKPhotoPickerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ZKPhotoPickerDemo/ZKPhotoPickerDemo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -427,6 +433,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X78BX3WNP2;
 				INFOPLIST_FILE = ZKPhotoPickerDemo/Info.plist;
@@ -436,6 +443,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.buydeem.ZKPhotoPickerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ZKPhotoPickerDemo/ZKPhotoPickerDemo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
