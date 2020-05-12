@@ -1,6 +1,0 @@
-framework module ZKPhotoPicker {
-  umbrella header "ZKPhotoPicker-umbrella.h"
-
-  export *
-  module * { export * }
-}
