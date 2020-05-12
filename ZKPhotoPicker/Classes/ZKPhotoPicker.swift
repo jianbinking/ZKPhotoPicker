@@ -44,7 +44,7 @@ public class ZKPhotoPicker: NSObject {
         self.barBtnConfirm.action = #selector(confirmButtonTapped)
     }
     
-    public static func showPickerView(in vc: UIViewController,
+    @objc public static func showPickerView(in vc: UIViewController,
                                delegate: ZKPhotoPickerDelegate,
                                config: ZKPhotoPickerConfig = .init(),
                                selectedAssets: [PHAsset]? = nil,

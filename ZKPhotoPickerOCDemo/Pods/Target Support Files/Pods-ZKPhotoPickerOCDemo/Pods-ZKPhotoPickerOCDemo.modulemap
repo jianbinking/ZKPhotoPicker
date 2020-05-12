@@ -1,0 +1,6 @@
+framework module Pods_ZKPhotoPickerOCDemo {
+  umbrella header "Pods-ZKPhotoPickerOCDemo-umbrella.h"
+
+  export *
+  module * { export * }
+}

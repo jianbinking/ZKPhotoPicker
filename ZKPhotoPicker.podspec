@@ -30,6 +30,7 @@ Pod::Spec.new do |s|
 
   # s.ios.deployment_target = '11.0'
   s.platform         = :ios, '11.0'
+  s.swift_versions   = '5.0'
 
   s.source_files = 'ZKPhotoPicker/Classes/**/*'
   

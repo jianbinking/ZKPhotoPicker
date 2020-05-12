@@ -44,8 +44,8 @@ extension ZKPhotoPickerConfig {
             let checkLineWidth: CGFloat = 2
             
             var borderColor: UIColor = .black
-            var bgColor: UIColor = self.viewBackGroundColor.withAlphaComponent(0.4)
-            var checkColor = self.viewBackGroundReverseColor
+            var bgColor: UIColor = UIColor.init(white: 0, alpha: 0.4)
+            var checkColor: UIColor = .white
             if (isSelected) {
                 borderColor = self.viewBackGroundReverseColor
                 bgColor = self.selectTagColor
@@ -65,7 +65,7 @@ extension ZKPhotoPickerConfig {
             ctx.addPath(path.cgPath)
             ctx.fillPath()
             borderColor.setStroke()
-            ctx.setLineWidth(1)
+            ctx.setLineWidth(2)
             ctx.strokePath()
             ctx.restoreGState()
             

@@ -75,6 +75,21 @@ public extension PHAsset {
         }
     }
     
+    @objc func zkOCFetchImage(targetSize: CGSize,
+                        contentMode: PHImageContentMode,
+                        usePlaceholder: Bool = true,
+                        deliveryMode: PHImageRequestOptionsDeliveryMode = .opportunistic,
+                        completeHandle:@escaping (UIImage?, Bool, NSError?) -> Void) {
+        self.zkFetchImage(targetSize: targetSize,
+                          contentMode: contentMode,
+                          usePlaceholder: usePlaceholder,
+                          deliveryMode: deliveryMode,
+                          completeHandle: {
+                            img, isPlaceholder, err in
+                            completeHandle(img, isPlaceholder, err as NSError?)
+        })
+    }
+    
     func zkFetchImage(targetSize: CGSize,
                       contentMode: PHImageContentMode,
                       usePlaceholder: Bool = true,

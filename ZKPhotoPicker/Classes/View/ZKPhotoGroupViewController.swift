@@ -18,6 +18,7 @@ class ZKPhotoGroupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = ZKPhotoPicker.current?.config.mediaType.desc
+        self.view.backgroundColor = ZKPhotoPicker.current?.config.viewBackGroundColor
         
         self.toolbarItems = ZKPhotoPicker.current?.tbItems
         

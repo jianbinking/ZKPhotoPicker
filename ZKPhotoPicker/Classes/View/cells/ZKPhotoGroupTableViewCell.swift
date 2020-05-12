@@ -29,6 +29,7 @@ class ZKPhotoGroupTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         self.lblDesc = UILabel()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
         self.backgroundColor = ZKPhotoPicker.current?.config.viewBackGroundColor
         self.contentView.addSubview(self.lblDesc)
         self.lblDesc.textColor = ZKPhotoPicker.current?.config.textColor
