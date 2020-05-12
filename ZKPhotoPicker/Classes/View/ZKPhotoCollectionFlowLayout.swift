@@ -1,0 +1,66 @@
+//
+//  ZKPhotoCollectionFlowLayout.swift
+//  ZKPhotoPicker
+//
+//  Created by Doby on 2020/5/9.
+//  Copyright © 2020 Doby. All rights reserved.
+//
+
+import UIKit
+import Photos
+
+class ZKPhotoCollectionFlowLayout: UICollectionViewFlowLayout {
+    
+    var itemCount: Int = 0
+    
+    weak var delegate: ZKPhotoPickerDelegate?
+    weak var collection: PHAssetCollection?
+    
+    init(collection: PHAssetCollection) {
+        self.delegate = ZKPhotoPicker.current?.delegate
+        self.collection = collection
+        super.init()
+        self.minimumInteritemSpacing = 10
+        self.minimumLineSpacing = 10
+        self.sectionInset = .init(top: 10, left: 10, bottom: 10, right: 10)
+        self.itemSize = .init(width: 80, height: 80)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepare() {
+        super.prepare()
+        
+        if let collectionView = self.collectionView,
+            let delegate = self.delegate,
+            let collection = self.collection {
+            if let space = delegate.mininumColumnSpace?(in: collection) {
+                self.minimumInteritemSpacing = space
+            }
+            if let space = delegate.mininumLineSpacing?(in: collection) {
+                self.minimumLineSpacing = space
+            }
+            if let insets = delegate.sectionInset?(in: collection) {
+                self.sectionInset = insets
+            }
+            var itemWidth: Int = 80
+            let sectionInsets = self.sectionInset
+            let columnSpacing = self.minimumInteritemSpacing
+            let columnCount = Int((collectionView.bounds.width - sectionInsets.left - sectionInsets.right + columnSpacing) / (CGFloat(itemWidth) + columnSpacing))
+            itemWidth = Int((collectionView.bounds.width - sectionInsets.left - sectionInsets.right + columnSpacing) / CGFloat(columnCount) - columnSpacing)
+            self.itemSize = .init(width: itemWidth, height: itemWidth)
+            
+            let rowCount = Int(ceil(Double(self.itemCount) / Double(columnCount)))
+            let contentHeight = self.sectionInset.top + CGFloat(rowCount) * (self.itemSize.height + self.minimumLineSpacing) - self.minimumLineSpacing + self.sectionInset.bottom
+            var offset = contentHeight - collectionView.bounds.height
+            offset = max(offset, 0)
+            collectionView.contentOffset = .init(x: 0, y: offset)
+            
+        }
+        
+        
+    }
+    
+}
