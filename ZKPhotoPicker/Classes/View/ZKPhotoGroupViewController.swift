@@ -32,6 +32,7 @@ class ZKPhotoGroupViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem = .init(title: "取消", style: .plain, target: self, action: #selector(close))
 
+        self.groupManager.startCachingCollectionKeyThumbImages()
         
         // Do any additional setup after loading the view.
     }

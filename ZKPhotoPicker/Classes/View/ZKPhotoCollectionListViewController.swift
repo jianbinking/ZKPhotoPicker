@@ -41,13 +41,13 @@ class ZKPhotoCollectionListViewController: UIViewController {
         self.collectionView.register(ZKPhotoCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         self.view.addSubview(self.collectionView)
         
-        ZKPhotoPicker.current?.cachingImageManager.startCachingThumbImage(for: self.manager.assetsManagers.map {$0.asset})
+        self.manager.startCachingThumbImage()
 
         // Do any additional setup after loading the view.
     }
     
     deinit {
-        ZKPhotoPicker.current?.cachingImageManager.stopCachingThumbImage(for: self.manager.assetsManagers.map {$0.asset})
+        self.manager.stopCachingThumbImage()
     }
     
     override func viewWillLayoutSubviews() {

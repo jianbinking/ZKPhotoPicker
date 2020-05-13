@@ -36,12 +36,14 @@ class ZKPhotoCollectionManager: NSObject {
     }
     
     func startCachingThumbImage() {
+        print("开始缓存\(collection.localizedTitle ?? "")")
         if let picker = ZKPhotoPicker.current {
             picker.cachingImageManager.startCachingThumbImage(for: self.assetsManagers.map{$0.asset})
         }
     }
     
     func stopCachingThumbImage() {
+        print("停止缓存\(collection.localizedTitle ?? "")")
         if let picker = ZKPhotoPicker.current {
             picker.cachingImageManager.stopCachingThumbImage(for: self.assetsManagers.map{$0.asset})
         }

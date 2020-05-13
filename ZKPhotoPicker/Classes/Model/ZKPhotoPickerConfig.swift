@@ -10,15 +10,16 @@ import UIKit
 
 public class ZKPhotoPickerConfig: NSObject {
     
-    var mediaType: ZKAssetMediaType = .photo
+    @objc var mediaType: ZKAssetMediaType = .photo
     
-    var textColor: UIColor = .black
-    var viewBackGroundColor: UIColor = .white
-    var viewBackGroundReverseColor: UIColor = .black
-    var selectTagColor: UIColor = .blue
-    var selectTagPosition: ZKSelectTagPosition = .topRight
+    @objc var textColor: UIColor = .black
+    @objc var viewBackGroundColor: UIColor = .white
+    @objc var viewBackGroundReverseColor: UIColor = .black
+    @objc var selectTagColor: UIColor = .blue
+    @objc var selectTagPosition: ZKSelectTagPosition = .topRight
     /// 大图查看时，是否可用确定，确定后选择当前并退出
-    var enableLargeConfirmAsSelect = true
+    @objc var enableLargeConfirmAsSelect = true
+    @objc var customBundlePath: String? = nil
     
     lazy var selectTagImageN: UIImage = self.createCheckImage(isSelected: false)
     lazy var selectTagImageS: UIImage = self.createCheckImage(isSelected: true)

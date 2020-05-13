@@ -15,6 +15,7 @@ import Photos
     @objc optional func photoPicker(picker: ZKPhotoPicker, groupCollectionShouldHide group:PHAssetCollection) -> Bool
     
     //MARK: - collection appearence
+    @objc optional func photoPicker(picker: ZKPhotoPicker, isDefaultCollection collection: PHAssetCollection) -> Bool
     @objc optional func photoPicker(picker: ZKPhotoPicker, assetShouldHide asset: PHAsset, in collection: PHAssetCollection) -> Bool
     //MARK: - select asset
     @objc optional func photoPicker(picker: ZKPhotoPicker, canSelectAsset asset: PHAsset) -> Bool

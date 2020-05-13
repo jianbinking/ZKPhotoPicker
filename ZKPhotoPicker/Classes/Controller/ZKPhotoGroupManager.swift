@@ -33,6 +33,13 @@ class ZKPhotoGroupManager: NSObject {
                 
             }
         }
-        
     }
+    
+    /// 开始缓存collection的keyThumb图片，不用取消，dealloc的时候取消全部缓存
+    func startCachingCollectionKeyThumbImages() {
+        if let picker = ZKPhotoPicker.current {
+            picker.cachingImageManager.startCachingThumbImage(for: self.collections.map{$0.keyAsset}.compactMap{$0})
+        }
+    }
+    
 }

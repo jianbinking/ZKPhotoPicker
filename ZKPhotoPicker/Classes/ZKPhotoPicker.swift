@@ -14,28 +14,22 @@ private var _currentPicker: ZKPhotoPicker?
 
 public class ZKPhotoPicker: NSObject {
     
-    internal static var current: ZKPhotoPicker? {
-        return _currentPicker
+    public var selectedAssets: [PHAsset] = [] {
+        didSet {
+            self.updateBarButtons()
+        }
     }
-    internal var tbItems: [UIBarButtonItem] {
-        return [self.barBtnCount, .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), self.barBtnConfirm]
-    }
+    public weak var delegate: ZKPhotoPickerDelegate?
+    public let config: ZKPhotoPickerConfig
+    
     internal let cachingImageManager = ZKPhotoCachingImageManager()
     private var barBtnCount = UIBarButtonItem.init(title: "已选(0)", style: .plain, target: nil, action: nil)
     private var barBtnConfirm = UIBarButtonItem.init(title: "确定", style: .plain, target: nil, action: nil)
     private var nav: UINavigationController?
     
-    var selectedAssets: [PHAsset] = [] {
-        didSet {
-            self.updateBarButtons()
-        }
-    }
+    //MARK: - public funcs
     
-    weak var delegate: ZKPhotoPickerDelegate?
-    let config: ZKPhotoPickerConfig
-    
-    
-    init(_ config: ZKPhotoPickerConfig) {
+    public init(_ config: ZKPhotoPickerConfig) {
         self.config = config
         super.init()
         self.barBtnCount.target = self
@@ -79,37 +73,6 @@ public class ZKPhotoPicker: NSObject {
         }
     }
     
-    
-    //MARK: - public funcs
-    func isAssetSelected(_ asset: PHAsset) -> Bool {
-        return self.selectedAssets.contains{$0.localIdentifier == asset.localIdentifier}
-    }
-    
-    func didSelect(asset: PHAsset) {
-        self.selectedAssets.append(asset)
-        self.updateBarButtons()
-    }
-    
-    func didDeselect(asset: PHAsset) {
-        self.selectedAssets.removeAll(where: {$0.localIdentifier == asset.localIdentifier})
-        self.delegate?.photoPicker?(picker: self, didDeselectAsset: asset)
-        self.updateBarButtons()
-    }
-    
-    func completeSelect() {
-        self.delegate?.photoPicker?(picker: self, didFinishPick: self.selectedAssets)
-        self.nav?.dismiss(animated: true, completion: {
-            _currentPicker = nil
-        })
-    }
-    
-    func cancelSelect() {
-        self.delegate?.photoPickerDidCancelPick?(picker: self)
-        self.nav?.dismiss(animated: true, completion: {
-            _currentPicker = nil
-        })
-    }
-    
     //MARK: - private funcs
     
     private func updateBarButtons() {
@@ -125,6 +88,45 @@ public class ZKPhotoPicker: NSObject {
         self.completeSelect()
     }
     
+}
+
+extension ZKPhotoPicker {
+    
+    internal static var current: ZKPhotoPicker? {
+        return _currentPicker
+    }
+    internal var tbItems: [UIBarButtonItem] {
+        return [self.barBtnCount, .init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), self.barBtnConfirm]
+    }
+    
+    internal func isAssetSelected(_ asset: PHAsset) -> Bool {
+        return self.selectedAssets.contains{$0.localIdentifier == asset.localIdentifier}
+    }
+    
+    internal func didSelect(asset: PHAsset) {
+        self.selectedAssets.append(asset)
+        self.updateBarButtons()
+    }
+    
+    internal func didDeselect(asset: PHAsset) {
+        self.selectedAssets.removeAll(where: {$0.localIdentifier == asset.localIdentifier})
+        self.delegate?.photoPicker?(picker: self, didDeselectAsset: asset)
+        self.updateBarButtons()
+    }
+    
+    internal func completeSelect() {
+        self.delegate?.photoPicker?(picker: self, didFinishPick: self.selectedAssets)
+        self.nav?.dismiss(animated: true, completion: {
+            _currentPicker = nil
+        })
+    }
+    
+    internal func cancelSelect() {
+        self.delegate?.photoPickerDidCancelPick?(picker: self)
+        self.nav?.dismiss(animated: true, completion: {
+            _currentPicker = nil
+        })
+    }
 }
 
 

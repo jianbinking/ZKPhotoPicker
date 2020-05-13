@@ -57,7 +57,7 @@ class ZKPhotoShowContentViewController: UIViewController {
         self.view.addGestureRecognizer(double)
         tap.require(toFail: double)
         
-        self.assetManager.asset.zkFetchImage(targetSize: .zero, contentMode: .default, usePlaceholder: false) { (image, isPlaceholder, err) in
+        self.assetManager.asset.zkFetchImage(targetSize: .zero, contentMode: .default) { (image, err) in
             if let image = image {
                 self.imageView.image = image
                 self.resizeImageView()

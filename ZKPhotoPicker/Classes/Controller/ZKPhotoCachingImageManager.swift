@@ -18,6 +18,10 @@ class ZKPhotoCachingImageManager: NSObject {
         self.cacheManager.allowsCachingHighQualityImages = true
     }
     
+    deinit {
+        self.cacheManager.stopCachingImagesForAllAssets()
+    }
+    
     func startCachingThumbImage(for assets:[PHAsset]) {
         self.cacheManager.startCachingImages(for: assets, targetSize: kZKPhotoThumbNailSize, contentMode: .aspectFill, options: PHImageRequestOptions.zkThumbOption)
     }

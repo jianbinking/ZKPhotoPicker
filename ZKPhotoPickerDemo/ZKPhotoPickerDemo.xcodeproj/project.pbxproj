@@ -30,6 +30,7 @@
 		23302CB1246AB1DE00FED654 /* ZKPhotoShowPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302CA0246AB1DE00FED654 /* ZKPhotoShowPageViewController.swift */; };
 		23302CB2246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302CA1246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift */; };
 		23302CB3246AB1DE00FED654 /* ZKPhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302CA2246AB1DE00FED654 /* ZKPhotoPicker.swift */; };
+		23302CB6246BA39200FED654 /* ZKPhotoPicker.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 23302CB5246BA39200FED654 /* ZKPhotoPicker.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		23302CA0246AB1DE00FED654 /* ZKPhotoShowPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoShowPageViewController.swift; sourceTree = "<group>"; };
 		23302CA1246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoCollectionFlowLayout.swift; sourceTree = "<group>"; };
 		23302CA2246AB1DE00FED654 /* ZKPhotoPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoPicker.swift; sourceTree = "<group>"; };
+		23302CB5246BA39200FED654 /* ZKPhotoPicker.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZKPhotoPicker.bundle; sourceTree = "<group>"; };
 		D19B8FF0246AF338006C0C2D /* ZKPhotoPickerDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ZKPhotoPickerDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,6 +110,7 @@
 		23302C8C246AB1DE00FED654 /* ZKPhotoPicker */ = {
 			isa = PBXGroup;
 			children = (
+				23302CB4246BA36800FED654 /* Bundle */,
 				23302C8D246AB1DE00FED654 /* Classes */,
 			);
 			name = ZKPhotoPicker;
@@ -168,6 +171,14 @@
 				23302C9B246AB1DE00FED654 /* ZKPhotoGroupTableViewCell.swift */,
 			);
 			path = cells;
+			sourceTree = "<group>";
+		};
+		23302CB4246BA36800FED654 /* Bundle */ = {
+			isa = PBXGroup;
+			children = (
+				23302CB5246BA39200FED654 /* ZKPhotoPicker.bundle */,
+			);
+			path = Bundle;
 			sourceTree = "<group>";
 		};
 		E931B3C458BDA6E4F69C200E /* Frameworks */ = {
@@ -237,6 +248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23302B6E246A411F00FED654 /* LaunchScreen.storyboard in Resources */,
+				23302CB6246BA39200FED654 /* ZKPhotoPicker.bundle in Resources */,
 				23302B6B246A411F00FED654 /* Assets.xcassets in Resources */,
 				23302B69246A411B00FED654 /* Main.storyboard in Resources */,
 			);

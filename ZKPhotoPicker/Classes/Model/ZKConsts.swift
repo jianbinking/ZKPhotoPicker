@@ -10,7 +10,7 @@ import UIKit
 
 let kZKPhotoThumbNailSize = CGSize.init(width: 200, height: 200)
 
-public enum ZKAssetMediaType: Int, OptionSet {
+@objc public enum ZKAssetMediaType: Int, OptionSet {
     
     case photo, video, unknown
     
@@ -55,7 +55,7 @@ public enum ZKFetchImageFail: Error {
     }
 }
 
-public enum ZKSelectTagPosition {
+@objc public enum ZKSelectTagPosition: Int {
     case topLeft, topRight, bottomLeft, bottomRight
 }
 

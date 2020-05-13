@@ -69,7 +69,7 @@ extension ViewController: ZKPhotoPickerDelegate {
                 self.imgvs[idx] = imgv
             }
             asset.zkFetchImage(targetSize: .init(width: 100, height: 100), contentMode: .aspectFit, completeHandle: {
-                img, isPlaceholder, err in
+                img, err in
                 imgv.image = img
             })
         }

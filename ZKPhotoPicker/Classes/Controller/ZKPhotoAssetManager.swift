@@ -9,6 +9,7 @@
 import UIKit
 import Photos
 
+/// 照片被选择之后的坚挺，会weak持有，尽情添加
 @objc protocol ZKPhotoAssetSelectedListener: NSObjectProtocol {
     func assetSelectedChange(isSelected: Bool)
 }

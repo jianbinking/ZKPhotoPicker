@@ -11,7 +11,7 @@ import Photos
 
 class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelegate, ZKPhotoAssetSelectedListener {
     
-    var img: UIImage? {
+    var img: UIImage? = UIImage.zkDefaultImage {
         didSet {
             self.setNeedsDisplay()
         }

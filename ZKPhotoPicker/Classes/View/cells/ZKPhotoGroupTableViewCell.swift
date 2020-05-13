@@ -22,7 +22,7 @@ class ZKPhotoGroupTableViewCell: UITableViewCell {
         }
     }
     
-    private var thumbImage: UIImage?
+    private var thumbImage: UIImage? = UIImage.zkDefaultImage
     private let lblDesc: UILabel
 
     

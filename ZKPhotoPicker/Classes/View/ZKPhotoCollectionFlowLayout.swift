@@ -9,6 +9,7 @@
 import UIKit
 import Photos
 
+private let ZKPhotoCollectionItemWidth: CGFloat = 80
 class ZKPhotoCollectionFlowLayout: UICollectionViewFlowLayout {
     
     var itemCount: Int = 0
@@ -23,7 +24,7 @@ class ZKPhotoCollectionFlowLayout: UICollectionViewFlowLayout {
         self.minimumInteritemSpacing = 10
         self.minimumLineSpacing = 10
         self.sectionInset = .init(top: 10, left: 10, bottom: 10, right: 10)
-        self.itemSize = .init(width: 80, height: 80)
+        self.itemSize = .init(width: ZKPhotoCollectionItemWidth, height: ZKPhotoCollectionItemWidth)
     }
     
     required init?(coder: NSCoder) {
@@ -45,7 +46,7 @@ class ZKPhotoCollectionFlowLayout: UICollectionViewFlowLayout {
             if let insets = delegate.sectionInset?(in: collection) {
                 self.sectionInset = insets
             }
-            var itemWidth: Int = 80
+            var itemWidth: Int = Int(ZKPhotoCollectionItemWidth)
             let sectionInsets = self.sectionInset
             let columnSpacing = self.minimumInteritemSpacing
             let columnCount = Int((collectionView.bounds.width - sectionInsets.left - sectionInsets.right + columnSpacing) / (CGFloat(itemWidth) + columnSpacing))

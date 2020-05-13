@@ -37,6 +37,7 @@ Pod::Spec.new do |s|
   # s.resource_bundles = {
   #   'ZKPhotoPicker' => ['ZKPhotoPicker/Assets/*.png']
   # }
+  s.resource =  'ZKPhotoPicker/Bundle/ZKPhotoPicker.bundle'
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit', 'Foundation', 'Photos'

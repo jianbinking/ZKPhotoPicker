@@ -79,21 +79,18 @@ public extension PHAsset {
     /// - Parameters:
     ///   - targetSize: 目标大小
     ///   - contentMode: contentMode
-    ///   - usePlaceholder: 是否使用placeHolder（默认是，会先调用block返回默认图）
     ///   - deliveryMode: 加载模式，默认多次加载
     ///   - completeHandle: 成功回调（图片，是否是缩略图，错误）
     @objc func zkOCFetchImage(targetSize: CGSize,
                         contentMode: PHImageContentMode,
-                        usePlaceholder: Bool = true,
                         deliveryMode: PHImageRequestOptionsDeliveryMode = .opportunistic,
-                        completeHandle:@escaping (UIImage?, Bool, NSError?) -> Void) {
+                        completeHandle:@escaping (UIImage?, NSError?) -> Void) {
         self.zkFetchImage(targetSize: targetSize,
                           contentMode: contentMode,
-                          usePlaceholder: usePlaceholder,
                           deliveryMode: deliveryMode,
                           completeHandle: {
-                            img, isPlaceholder, err in
-                            completeHandle(img, isPlaceholder, err as NSError?)
+                            img, err in
+                            completeHandle(img, err as NSError?)
         })
     }
     
@@ -101,42 +98,37 @@ public extension PHAsset {
     /// - Parameters:
     ///   - targetSize: 目标大小
     ///   - contentMode: contentMode
-    ///   - usePlaceholder: 是否使用placeHolder（默认是，会先调用block返回默认图）
     ///   - deliveryMode: 加载模式，默认多次加载
     ///   - completeHandle: 成功回调（图片，是否是缩略图，错误）   
     func zkFetchImage(targetSize: CGSize,
                       contentMode: PHImageContentMode,
-                      usePlaceholder: Bool = true,
                       deliveryMode: PHImageRequestOptionsDeliveryMode = .opportunistic,
-                      completeHandle:@escaping (UIImage?, Bool, ZKFetchImageFail?) -> Void) {
+                      completeHandle:@escaping (UIImage?, ZKFetchImageFail?) -> Void) {
         
-        if usePlaceholder {
-                completeHandle(UIImage.init(named: "img.png"), true, nil)
+        let opt = PHImageRequestOptions()
+        opt.version = .current
+        opt.deliveryMode = deliveryMode
+        opt.resizeMode = .exact
+        opt.isNetworkAccessAllowed = false
+        opt.isSynchronous = false
+        opt.progressHandler = nil
+        
+        
+        PHImageManager.default().requestImage(for: self, targetSize: targetSize, contentMode: contentMode, options: opt) { (image, info) in
+            if let err = info?[PHImageErrorKey] as? Error {
+                completeHandle(nil, .systemError(err))
             }
-            let opt = PHImageRequestOptions()
-            opt.version = .current
-            opt.deliveryMode = deliveryMode
-            opt.resizeMode = .exact
-            opt.isNetworkAccessAllowed = false
-            opt.isSynchronous = false
-            opt.progressHandler = nil
-            
-            
-            PHImageManager.default().requestImage(for: self, targetSize: targetSize, contentMode: contentMode, options: opt) { (image, info) in
-                if let err = info?[PHImageErrorKey] as? Error {
-                    completeHandle(nil, false, .systemError(err))
-                }
-                else if let canceled = info?[PHImageCancelledKey] as? Bool, canceled {
-                    completeHandle(nil, false, .canceled)
-                }
-                else if let image = image {
-                    completeHandle(image, false, nil)
-                }
-                else {
-                    completeHandle(nil, false, .unknownErr)
-                }
+            else if let canceled = info?[PHImageCancelledKey] as? Bool, canceled {
+                completeHandle(nil, .canceled)
+            }
+            else if let image = image {
+                completeHandle(image, nil)
+            }
+            else {
+                completeHandle(nil, .unknownErr)
             }
         }
+    }
 }
 
 extension PHImageRequestOptions {
@@ -161,5 +153,25 @@ extension PHImageRequestOptions {
         opt.isSynchronous = false
         opt.progressHandler = nil
         return opt
+    }
+}
+
+extension UIImage {
+    static var zkDefaultImage: UIImage? {
+
+        var bundle: Bundle?
+        if let customBundlePath = ZKPhotoPicker.current?.config.customBundlePath {
+            bundle = Bundle.init(path: customBundlePath)
+        }
+        else {
+            let mainBundle = Bundle.init(for: ZKPhotoPicker.self)
+            if let path = mainBundle.path(forResource: "ZKPhotoPicker", ofType: "bundle") {
+                bundle = Bundle.init(path: path)
+            }
+        }
+        if let imgPath = bundle?.path(forResource: "image_placeholder", ofType: "png") {
+            return UIImage.init(contentsOfFile: imgPath)
+        }
+        return nil
     }
 }
