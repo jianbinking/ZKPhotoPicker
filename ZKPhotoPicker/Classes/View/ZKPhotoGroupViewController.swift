@@ -34,6 +34,19 @@ class ZKPhotoGroupViewController: UIViewController {
 
         self.groupManager.startCachingCollectionKeyThumbImages()
         
+        let defaultCollectionManager: ZKPhotoCollectionManager? = self.groupManager.collections.first(where: {
+            cmn in
+            if let picker = ZKPhotoPicker.current,
+                let isDefault = picker.delegate?.photoPicker?(picker: picker, isDefaultCollection: cmn.collection),
+                isDefault {
+                return true
+            }
+            return false
+        })
+        if let mn = defaultCollectionManager {
+            self.navigationController?.pushViewController(ZKPhotoCollectionListViewController.init(collectionManager: mn), animated: false)
+        }
+        
         // Do any additional setup after loading the view.
     }
     

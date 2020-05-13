@@ -76,5 +76,12 @@ extension ViewController: ZKPhotoPickerDelegate {
         self.view.setNeedsLayout()
     }
     
+    func photoPicker(picker: ZKPhotoPicker, isDefaultCollection collection: PHAssetCollection) -> Bool {
+        if collection.assetCollectionSubtype == .smartAlbumUserLibrary {
+            return true
+        }
+        return false
+    }
+    
 }
 
