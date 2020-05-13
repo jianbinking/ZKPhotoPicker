@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -85,7 +85,6 @@
 				88BCE9F00F0F6AFB81C812D0 /* Pods-ZKPhotoPickerPodDemo.debug.xcconfig */,
 				807DC5710EDC9DB242707D0E /* Pods-ZKPhotoPickerPodDemo.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

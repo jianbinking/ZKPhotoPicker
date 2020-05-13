@@ -58,13 +58,20 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
             return
         }
         
+        let ctx = UIGraphicsGetCurrentContext()!
+        ctx.saveGState()
+        ZKPhotoPicker.current?.config.viewBackGroundColor.setFill()
+        ctx.fill(rect)
+        ctx.restoreGState()
+        
+        
         img.draw(in: rect.aspectFillRect(for: img.size))
         
         if let picker = ZKPhotoPicker.current {
             if picker.isAssetSelected(self.assetManager!.asset) {
                 picker.config.selectTagColor.setStroke()
-                UIGraphicsGetCurrentContext()?.setLineWidth(8)
-                UIGraphicsGetCurrentContext()?.stroke(rect)
+                ctx.setLineWidth(8)
+                ctx.stroke(rect)
                 self.btnSelect.isSelected = true
             }
             else {
