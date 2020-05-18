@@ -72,8 +72,7 @@ class ZKPhotoShowContentViewController: UIViewController {
             photoType in
             if photoType == .gif {
 
-                
-                PHImageManager.default().requestImageDataAndOrientation(for: self.assetManager.asset, options: nil, resultHandler: {
+                PHImageManager.default().requestImageData(for: self.assetManager.asset, options: nil, resultHandler: {
                     data, uti, orientation, info in
                     self.imageView.animatedImage = .init(gifData: data)
                     self.resizeImageView()

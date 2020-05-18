@@ -42,5 +42,5 @@ Pod::Spec.new do |s|
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit', 'Foundation', 'Photos'
   s.requires_arc = true
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'FLAnimatedImage', '~> 1.0.12'
 end

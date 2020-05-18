@@ -10,6 +10,6 @@ target 'ZKPhotoPickerPodDemo' do
 
   pod 'ZKPhotoPicker', :path => '../'
 #  pod 'ZKPhotoPicker', '~> 1.0.1'
-  pod 'FLAnimatedImage'
+#  pod 'FLAnimatedImage'
 
 end
