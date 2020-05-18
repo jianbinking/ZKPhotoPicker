@@ -21,8 +21,11 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
     var assetManager: ZKPhotoAssetManager? {
         didSet {
             if let mn = self.assetManager {
-                self.lblPhotoTag.text = mn.photoType.desc
-                self.lblPhotoTag.isHidden = !(mn.mediaType == .photo && mn.photoType != .staticPhoto)
+                self.assetManager?.fetchPhotoType({ (type) in
+                    self.lblPhotoTag.text = type.desc
+                    self.lblPhotoTag.isHidden = !(mn.mediaType == .photo && type != .staticPhoto)
+                    self.setNeedsLayout()
+                })
                 mn.addSelectListener(self)
                 ZKPhotoPicker.current?.cachingImageManager.getThumbImage(for: mn.asset, result: {
                     img, err in
@@ -48,6 +51,7 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
         self.lblPhotoTag.backgroundColor = UIColor.init(white: 1, alpha: 0.3)
         self.lblPhotoTag.layer.cornerRadius = 5
         self.lblPhotoTag.clipsToBounds = true
+        self.lblPhotoTag.isHidden = true
     }
     
     required init?(coder: NSCoder) {

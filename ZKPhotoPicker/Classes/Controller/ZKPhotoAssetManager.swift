@@ -18,7 +18,6 @@ class ZKPhotoAssetManager: NSObject {
     
     let asset: PHAsset
     let mediaType: ZKAssetMediaType
-    let photoType: ZKAssetPhotoType
     private(set) var isSelected = false
     
     private let listeners = NSHashTable<ZKPhotoAssetSelectedListener>.init(options: .weakMemory)
@@ -27,12 +26,12 @@ class ZKPhotoAssetManager: NSObject {
         self.asset = asset
         
         self.mediaType = asset.zkMediaType
-        self.photoType = asset.zkPhotoType
         
         super.init()
         if let picker = ZKPhotoPicker.current {
             self.isSelected = picker.isAssetSelected(asset)
         }
+        
     }
     
     func addSelectListener(_ listener: ZKPhotoAssetSelectedListener) {
@@ -41,6 +40,15 @@ class ZKPhotoAssetManager: NSObject {
     
     func removeSelectListener(_ listener: ZKPhotoAssetSelectedListener) {
         self.listeners.remove(listener)
+    }
+    
+    func fetchPhotoType(_ handle:@escaping (ZKAssetPhotoType) -> Void) {
+        DispatchQueue.global().async {
+            let type = self.asset.zkPhotoType
+            DispatchQueue.main.async {
+                handle(type)
+            }
+        }
     }
     
     func selectTap() {

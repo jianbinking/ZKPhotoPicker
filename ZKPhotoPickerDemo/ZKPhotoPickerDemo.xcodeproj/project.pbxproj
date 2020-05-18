@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -31,6 +31,7 @@
 		23302CB2246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302CA1246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift */; };
 		23302CB3246AB1DE00FED654 /* ZKPhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23302CA2246AB1DE00FED654 /* ZKPhotoPicker.swift */; };
 		23302CB6246BA39200FED654 /* ZKPhotoPicker.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 23302CB5246BA39200FED654 /* ZKPhotoPicker.bundle */; };
+		44474858F923798467F3314D /* Pods_ZKPhotoPickerDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C2DD92B74583CFADE20883 /* Pods_ZKPhotoPickerDemo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,9 @@
 		23302CA1246AB1DE00FED654 /* ZKPhotoCollectionFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoCollectionFlowLayout.swift; sourceTree = "<group>"; };
 		23302CA2246AB1DE00FED654 /* ZKPhotoPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZKPhotoPicker.swift; sourceTree = "<group>"; };
 		23302CB5246BA39200FED654 /* ZKPhotoPicker.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZKPhotoPicker.bundle; sourceTree = "<group>"; };
+		27ACF86F9D5E5D57FB9BFFFF /* Pods-ZKPhotoPickerDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZKPhotoPickerDemo.release.xcconfig"; path = "Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo.release.xcconfig"; sourceTree = "<group>"; };
+		4F6DAFBA7136C72DE9A1C735 /* Pods-ZKPhotoPickerDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZKPhotoPickerDemo.debug.xcconfig"; path = "Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		81C2DD92B74583CFADE20883 /* Pods_ZKPhotoPickerDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZKPhotoPickerDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19B8FF0246AF338006C0C2D /* ZKPhotoPickerDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ZKPhotoPickerDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,12 +72,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44474858F923798467F3314D /* Pods_ZKPhotoPickerDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		10AD1A34F1A5C5EE108C6ED4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4F6DAFBA7136C72DE9A1C735 /* Pods-ZKPhotoPickerDemo.debug.xcconfig */,
+				27ACF86F9D5E5D57FB9BFFFF /* Pods-ZKPhotoPickerDemo.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		23302B55246A411B00FED654 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +95,7 @@
 				23302B60246A411B00FED654 /* ZKPhotoPickerDemo */,
 				23302B5F246A411B00FED654 /* Products */,
 				E931B3C458BDA6E4F69C200E /* Frameworks */,
+				10AD1A34F1A5C5EE108C6ED4 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -184,6 +199,7 @@
 		E931B3C458BDA6E4F69C200E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				81C2DD92B74583CFADE20883 /* Pods_ZKPhotoPickerDemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -195,9 +211,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 23302B72246A411F00FED654 /* Build configuration list for PBXNativeTarget "ZKPhotoPickerDemo" */;
 			buildPhases = (
+				B36B7A84F3352CD8C21C2913 /* [CP] Check Pods Manifest.lock */,
 				23302B5A246A411B00FED654 /* Sources */,
 				23302B5B246A411B00FED654 /* Frameworks */,
 				23302B5C246A411B00FED654 /* Resources */,
+				9D622884EB0ADFFD4E3B5130 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -255,6 +273,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9D622884EB0ADFFD4E3B5130 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZKPhotoPickerDemo/Pods-ZKPhotoPickerDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B36B7A84F3352CD8C21C2913 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ZKPhotoPickerDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		23302B5A246A411B00FED654 /* Sources */ = {
@@ -422,10 +482,12 @@
 		};
 		23302B73246A411F00FED654 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F6DAFBA7136C72DE9A1C735 /* Pods-ZKPhotoPickerDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = X78BX3WNP2;
 				INFOPLIST_FILE = ZKPhotoPickerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -443,6 +505,7 @@
 		};
 		23302B74246A411F00FED654 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 27ACF86F9D5E5D57FB9BFFFF /* Pods-ZKPhotoPickerDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

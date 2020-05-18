@@ -8,6 +8,7 @@
 
 import UIKit
 import Photos
+import FLAnimatedImage
 
 class ZKPhotoShowContentViewController: UIViewController {
     
@@ -16,7 +17,7 @@ class ZKPhotoShowContentViewController: UIViewController {
     unowned var pageVC: ZKPhotoShowPageViewController
     
     private var scrollView: UIScrollView!
-    private(set) var imageView: UIImageView!
+    private(set) var imageView: FLAnimatedImageView!
     
     var imageViewFrame: CGRect {
         return self.view.convert(self.imageView.frame, from: self.scrollView)
@@ -47,7 +48,7 @@ class ZKPhotoShowContentViewController: UIViewController {
         self.scrollView.delegate = self
         self.view.addSubview(self.scrollView)
         
-        self.imageView = UIImageView()
+        self.imageView = FLAnimatedImageView.init()
         self.scrollView.addSubview(self.imageView)
         
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(singleTap))
@@ -56,13 +57,40 @@ class ZKPhotoShowContentViewController: UIViewController {
         double.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(double)
         tap.require(toFail: double)
+
+        let opt = PHImageRequestOptions()
+        opt.isSynchronous = true
+        opt.deliveryMode = .highQualityFormat
+        opt.resizeMode = .fast
+        PHImageManager.default().requestImage(for: self.assetManager.asset, targetSize: .init(width: 200, height: 200), contentMode: .aspectFill, options: opt, resultHandler: {
+            img, info in
+            self.imageView.image = img
+            self.resizeImageView()
+        })
         
-        self.assetManager.asset.zkFetchImage(targetSize: .zero, contentMode: .default) { (image, err) in
-            if let image = image {
-                self.imageView.image = image
-                self.resizeImageView()
+        self.assetManager.fetchPhotoType({
+            photoType in
+            if photoType == .gif {
+
+                
+                PHImageManager.default().requestImageDataAndOrientation(for: self.assetManager.asset, options: nil, resultHandler: {
+                    data, uti, orientation, info in
+                    self.imageView.animatedImage = .init(gifData: data)
+                    self.resizeImageView()
+                })
             }
-        }
+            else {
+
+                self.assetManager.asset.zkFetchImage(targetSize: .zero, contentMode: .default) { (image, err) in
+                    if let image = image {
+                        self.imageView.image = image
+                        self.resizeImageView()
+                    }
+                }
+            }
+        })
+        
+        
         
     }
     
