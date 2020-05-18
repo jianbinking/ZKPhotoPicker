@@ -31,24 +31,31 @@ class ZKPhotoCachingImageManager: NSObject {
     }
     
     func getThumbImage(for asset: PHAsset?, result:@escaping (UIImage?, ZKFetchImageFail?) -> Void) {
+        self.getThumbImage(for: asset, result: {
+            image, info, error in
+            result(image, error)
+        })
+    }
+    
+    func getThumbImage(for asset: PHAsset?, result:@escaping (UIImage?, [AnyHashable: Any]?, ZKFetchImageFail?) -> Void) {
         guard let asset = asset else {
-            result(nil, .nilAsset)
+            result(nil, nil, .nilAsset)
             return
         }
         self.cacheManager.requestImage(for: asset, targetSize: kZKPhotoThumbNailSize, contentMode: .aspectFill, options: PHImageRequestOptions.zkThumbOption, resultHandler: {
             img, info in
             autoreleasepool {
                 if let err = info?[PHImageErrorKey] as? Error {
-                    result(nil, .systemError(err))
+                    result(nil, info, .systemError(err))
                 }
                 else if let canceled = info?[PHImageCancelledKey] as? Bool, canceled {
-                    result(nil, .canceled)
+                    result(nil, info, .canceled)
                 }
                 else if let image = img {
-                    result(image, nil)
+                    result(image, info, nil)
                 }
                 else {
-                    result(nil, .unknownErr)
+                    result(nil, info, .unknownErr)
                 }
             }
         })

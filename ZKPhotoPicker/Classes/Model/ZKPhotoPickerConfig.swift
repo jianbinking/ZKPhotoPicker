@@ -17,6 +17,7 @@ public class ZKPhotoPickerConfig: NSObject {
     @objc var viewBackGroundReverseColor: UIColor = .black
     @objc var selectTagColor: UIColor = .blue
     @objc var selectTagPosition: ZKSelectTagPosition = .topRight
+    @objc var mediaTypeTagPosition: ZKSelectTagPosition = .bottomLeft
     /// 大图查看时，是否可用确定，确定后选择当前并退出
     @objc var enableLargeConfirmAsSelect = true
     @objc var customBundlePath: String? = nil

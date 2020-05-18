@@ -75,6 +75,19 @@ public extension PHAsset {
         }
     }
     
+    var zkPhotoType: ZKAssetPhotoType {
+        if self.mediaSubtypes == .photoLive {
+            return .livePhoto
+        }
+        else {
+            let resource = PHAssetResource.assetResources(for: self)
+            if let fileName = resource.first?.originalFilename, fileName.uppercased().hasSuffix("GIF") {
+                return .gif
+            }
+        }
+        return .staticPhoto
+    }
+    
     /// OC获取图片（异步，因为oc不支持Error对象，所以套一层NSError）
     /// - Parameters:
     ///   - targetSize: 目标大小

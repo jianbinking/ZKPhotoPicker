@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 let kZKPhotoThumbNailSize = CGSize.init(width: 200, height: 200)
 
@@ -36,7 +37,29 @@ let kZKPhotoThumbNailSize = CGSize.init(width: 200, height: 200)
             return "未知"
         }
     }
-    
+}
+
+@objc public enum ZKAssetPhotoType: Int {
+    case staticPhoto, gif, livePhoto
+    public init(rawValue:Int) {
+        if rawValue == 1 {
+            self = .gif
+        }
+        else if rawValue == 2 {
+            self = .livePhoto
+        }
+        self = .staticPhoto
+    }
+    var desc: String {
+        switch self {
+        case .gif:
+            return "gif"
+        case .livePhoto:
+            return "live"
+        default:
+            return ""
+        }
+    }
 }
 
 public enum ZKFetchImageFail: Error {

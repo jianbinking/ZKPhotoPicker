@@ -16,15 +16,21 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
             self.setNeedsDisplay()
         }
     }
+    let lblPhotoTag = UILabel()
     let btnSelect = UIButton.init(type: .custom)
     var assetManager: ZKPhotoAssetManager? {
         didSet {
-            self.assetManager?.addSelectListener(self)
-            ZKPhotoPicker.current?.cachingImageManager.getThumbImage(for: self.assetManager?.asset, result: {
-                img, err in
-                self.img = img
-                self.setNeedsDisplay()
-            })
+            if let mn = self.assetManager {
+                self.lblPhotoTag.text = mn.photoType.desc
+                self.lblPhotoTag.isHidden = !(mn.mediaType == .photo && mn.photoType != .staticPhoto)
+                mn.addSelectListener(self)
+                ZKPhotoPicker.current?.cachingImageManager.getThumbImage(for: mn.asset, result: {
+                    img, err in
+                    self.img = img
+                    self.setNeedsDisplay()
+                })
+            }
+            
         }
     }
     
@@ -35,6 +41,13 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
         self.btnSelect.addTarget(self, action: #selector(selectButtonTapped(_:)), for: .touchUpInside)
         self.btnSelect.setImage(ZKPhotoPicker.current?.config.selectTagImageN, for: .normal)
         self.btnSelect.setImage(ZKPhotoPicker.current?.config.selectTagImageS, for: .selected)
+        self.contentView.addSubview(self.lblPhotoTag)
+        self.lblPhotoTag.textColor = .white
+        self.lblPhotoTag.font = .systemFont(ofSize: 10)
+        self.lblPhotoTag.textAlignment = .center
+        self.lblPhotoTag.backgroundColor = UIColor.init(white: 1, alpha: 0.3)
+        self.lblPhotoTag.layer.cornerRadius = 5
+        self.lblPhotoTag.clipsToBounds = true
     }
     
     required init?(coder: NSCoder) {
@@ -82,6 +95,7 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
         if let config = ZKPhotoPicker.current?.config {
             var rc = self.btnSelect.bounds
             switch config.selectTagPosition {
@@ -96,6 +110,23 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
                 rc.origin.y = self.bounds.height - rc.height
             }
             self.btnSelect.frame = rc
+            
+            self.lblPhotoTag.sizeToFit()
+            var tagrc = self.lblPhotoTag.bounds.insetBy(dx: -5, dy: 0)
+            tagrc.origin.x = 0
+            switch config.mediaTypeTagPosition {
+            case .topLeft:
+                tagrc.origin.x = 0
+            case .topRight:
+                tagrc.origin.x = self.bounds.width - tagrc.width
+            case .bottomLeft:
+                tagrc.origin.y = self.bounds.height - tagrc.height
+            case .bottomRight:
+                tagrc.origin.x = self.bounds.width - tagrc.width
+                tagrc.origin.y = self.bounds.height - tagrc.height
+            }
+            self.lblPhotoTag.frame = tagrc
+            
         }
     }
     

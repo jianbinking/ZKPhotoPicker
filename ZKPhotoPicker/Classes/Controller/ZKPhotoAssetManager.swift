@@ -17,12 +17,18 @@ import Photos
 class ZKPhotoAssetManager: NSObject {
     
     let asset: PHAsset
+    let mediaType: ZKAssetMediaType
+    let photoType: ZKAssetPhotoType
     private(set) var isSelected = false
     
     private let listeners = NSHashTable<ZKPhotoAssetSelectedListener>.init(options: .weakMemory)
     
     init(_ asset: PHAsset) {
         self.asset = asset
+        
+        self.mediaType = asset.zkMediaType
+        self.photoType = asset.zkPhotoType
+        
         super.init()
         if let picker = ZKPhotoPicker.current {
             self.isSelected = picker.isAssetSelected(asset)
