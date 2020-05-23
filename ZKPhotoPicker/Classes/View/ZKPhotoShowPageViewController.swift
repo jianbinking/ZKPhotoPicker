@@ -11,7 +11,7 @@ import Photos
 
 @objc protocol ZKPhotoShowDataSourceAndDelegate {
     func numberOfAssets() -> Int
-    func assetManagerAt(index: Int) -> ZKPhotoAssetManager?
+    func assetModelAt(index: Int) -> ZKAssetModel?
     
     func cellFrameAt(index: Int) -> CGRect
     
@@ -23,6 +23,9 @@ class ZKPhotoShowPageViewController: UIPageViewController {
     var isSwipe2Pop = false
     weak var showDS_D: ZKPhotoShowDataSourceAndDelegate?
     private let _startIndex: Int;
+    var picker: ZKPhotoPicker {
+        return self.navigationController?.parent as! ZKPhotoPicker
+    }
     var currentIndex: Int {
         get {
             if let currentVC = self.viewControllers?.first as? ZKPhotoShowContentViewController {
@@ -31,26 +34,27 @@ class ZKPhotoShowPageViewController: UIPageViewController {
             return self._startIndex
         }
     }
+    var currentContentVC: ZKPhotoShowContentViewController? {
+        return self.viewControllers?.first as? ZKPhotoShowContentViewController
+    }
     weak var currentAssetManager: ZKPhotoAssetManager? {
         didSet {
-            oldValue?.removeSelectListener(self)
-            self.currentAssetManager?.addSelectListener(self)
+            oldValue?.assetModel.removeSelectListener(self)
+            self.currentAssetManager?.assetModel.addSelectListener(self)
             self.updateTitle()
             self.updateRightNavItemImage()
         }
     }
     
-    var trans: ZKPhotoShowTransition
-    private weak var closePan: UIPanGestureRecognizer?
     var collectionCellFrame: CGRect? {
         return self.showDS_D?.cellFrameAt(index: self.currentIndex)
     }
     private let btnSelect = UIButton.init(type: .custom)
+    var interactivePopTrans: ZKPhotoShowInteractivePopTransition?
     
     init(showDataSourceAndDelegate: ZKPhotoShowDataSourceAndDelegate?, startIndex: Int) {
         self.showDS_D = showDataSourceAndDelegate
         self._startIndex = startIndex
-        self.trans = ZKPhotoShowTransition()
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [UIPageViewController.OptionsKey.interPageSpacing: 10])
         self.delegate = self
         self.dataSource = self
@@ -62,36 +66,31 @@ class ZKPhotoShowPageViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = ZKPhotoPicker.current?.config.viewBackGroundColor
+        self.view.backgroundColor = self.picker.config.viewBackGroundColor
         
-        if let picker = ZKPhotoPicker.current {
-            var tbItems = picker.tbItems
-            if picker.config.enableLargeConfirmAsSelect {
-                tbItems.removeLast()
-                tbItems.append(.init(title: "确定", style: .plain, target: self, action: #selector(confirmButtonTapped)))
-            }
-            self.toolbarItems = tbItems
-            self.btnSelect.setImage(picker.config.selectTagImageN, for: .normal)
-            self.btnSelect.setImage(picker.config.selectTagImageS, for: .selected)
+        var tbItems = self.picker.tbItems
+        if picker.config.enableLargeConfirmAsSelect {
+            tbItems.removeLast()
+            tbItems.append(.init(title: "确定", style: .plain, target: self, action: #selector(confirmButtonTapped)))
         }
+        self.toolbarItems = tbItems
+        self.btnSelect.setImage(self.picker.config.selectTagImageN, for: .normal)
+        self.btnSelect.setImage(self.picker.config.selectTagImageS, for: .selected)
         
-        let pan = UIPanGestureRecognizer.init(target: self, action: #selector(panGes(_:)))
-        pan.delegate = self
-        self.view.addGestureRecognizer(pan)
-        self.closePan = pan
         self.btnSelect.frame = .init(x: 0, y: 0, width: 44, height: 44)
         self.btnSelect.addTarget(self, action: #selector(selectButtonTapped), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(customView: self.btnSelect)
         
-        guard let assetMN = self.showDS_D?.assetManagerAt(index: self.currentIndex) else {
+        guard let assetModel = self.showDS_D?.assetModelAt(index: self.currentIndex) else {
             return
         }
         
-        let startVC = ZKPhotoShowContentViewController.init(index: self.currentIndex, assetManager: assetMN, pageVC: self)
+        let startVC = ZKPhotoShowContentViewController.init(index: self.currentIndex, assetManager: .init(model: assetModel), pageVC: self)
         self.setViewControllers([startVC], direction: .forward, animated: false, completion: nil)
         self.currentAssetManager = startVC.assetManager
         
 
+        self.interactivePopTrans = .init(pageVC: self)
         // Do any additional setup after loading the view.
     }
     
@@ -107,67 +106,23 @@ class ZKPhotoShowPageViewController: UIPageViewController {
     
     private func updateRightNavItemImage() {
         if let assetMN = self.currentAssetManager {
-            self.btnSelect.isSelected = assetMN.isSelected
+            self.btnSelect.isSelected = assetMN.assetModel.isSelected
         }
     }
     
     @objc private func selectButtonTapped() {
         
         if let contentVC = self.viewControllers?.first as? ZKPhotoShowContentViewController {
-            contentVC.assetManager.selectTap()
+            contentVC.assetManager.assetModel.selectTap()
         }
     }
     
     @objc private func confirmButtonTapped() {
-        if let picker = ZKPhotoPicker.current {
-            if picker.selectedAssets.count == 0, let currentAsset = self.currentAssetManager?.asset {
-                picker.didSelect(asset: currentAsset)
-            }
+        if picker.selectedAssets.count == 0, let currentAsset = self.currentAssetManager?.assetModel.asset {
+            picker.didSelect(asset: currentAsset)
         }
-        ZKPhotoPicker.current?.completeSelect()
+        picker.completeSelect()
     }
-    
-    @objc private func panGes(_ pan: UIPanGestureRecognizer) {
-        switch pan.state {
-        case .began:
-            self.navigationController?.setToolbarHidden(false, animated: false)
-            self.navigationController?.setNavigationBarHidden(false, animated: false)
-            self.trans.isInteractive = true
-            self.navigationController?.popViewController(animated: true)
-        case .changed:
-            let vector = pan.translation(in: self.view)
-            self.trans.updateTempImage(vector: vector)
-        case .ended:
-            let vector = pan.translation(in: self.view)
-            if vector.y > 150 {
-                self.trans.endGesTransform(finish: true, endFrame: self.showDS_D?.cellFrameAt(index: self.currentIndex) ?? .zero)
-            }
-            else {
-                self.trans.endGesTransform(finish: false, endFrame: .zero)
-            }
-        default:
-            break
-        }
-    }
-}
-
-extension ZKPhotoShowPageViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let pan = gestureRecognizer as? UIPanGestureRecognizer,
-            pan == self.closePan,
-            let currentVC = self.viewControllers?.first as? ZKPhotoShowContentViewController{
-            return currentVC.canStartSwipe2Close(pan: pan)
-        }
-        return false
-    }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if gestureRecognizer == self.closePan {
-            return true
-        }
-        return false
-    }
-    
 }
 
 extension ZKPhotoShowPageViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
@@ -177,10 +132,10 @@ extension ZKPhotoShowPageViewController: UIPageViewControllerDataSource, UIPageV
         guard preIdx >= 0 ,
             let itemCount = self.showDS_D?.numberOfAssets(),
             preIdx < itemCount,
-            let preManager = self.showDS_D?.assetManagerAt(index: preIdx) else {
+            let preModel = self.showDS_D?.assetModelAt(index: preIdx) else {
             return nil
         }
-        return ZKPhotoShowContentViewController.init(index: preIdx, assetManager: preManager, pageVC: self)
+        return ZKPhotoShowContentViewController.init(index: preIdx, assetManager: .init(model: preModel), pageVC: self)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
@@ -188,14 +143,14 @@ extension ZKPhotoShowPageViewController: UIPageViewControllerDataSource, UIPageV
         guard nextIdx >= 0 ,
             let itemCount = self.showDS_D?.numberOfAssets(),
             nextIdx < itemCount,
-            let preManager = self.showDS_D?.assetManagerAt(index: nextIdx) else {
+            let nextModel = self.showDS_D?.assetModelAt(index: nextIdx) else {
             return nil
         }
-        return ZKPhotoShowContentViewController.init(index: nextIdx, assetManager: preManager, pageVC: self)
+        return ZKPhotoShowContentViewController.init(index: nextIdx, assetManager: .init(model: nextModel), pageVC: self)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        if finished , completed, let contentVC = pageViewController.viewControllers?.first as? ZKPhotoShowContentViewController {
+        if finished , completed, let contentVC = self.currentContentVC {
             self.showDS_D?.pageVC?(self, didScroll2Index: contentVC.index)
             self.currentAssetManager = contentVC.assetManager
         }
@@ -206,5 +161,18 @@ extension ZKPhotoShowPageViewController: UIPageViewControllerDataSource, UIPageV
 extension ZKPhotoShowPageViewController: ZKPhotoAssetSelectedListener {
     func assetSelectedChange(isSelected: Bool) {
         self.updateRightNavItemImage()
+    }
+}
+
+extension ZKPhotoShowPageViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let pan = gestureRecognizer as? UIPanGestureRecognizer, pan.view == self.view {
+            return self.currentContentVC!.canStartSwipe2Close(pan: pan)
+        }
+        return false
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

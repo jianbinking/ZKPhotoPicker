@@ -8,75 +8,20 @@
 
 import UIKit
 import Photos
-
-/// 照片被选择之后的坚挺，会weak持有，尽情添加
-@objc protocol ZKPhotoAssetSelectedListener: NSObjectProtocol {
-    func assetSelectedChange(isSelected: Bool)
-}
-
 class ZKPhotoAssetManager: NSObject {
     
-    let asset: PHAsset
-    let mediaType: ZKAssetMediaType
-    private(set) var isSelected = false
+    let assetModel: ZKAssetModel
+    var picker: ZKPhotoPicker {
+        return self.assetModel.picker
+    }
     
-    private let listeners = NSHashTable<ZKPhotoAssetSelectedListener>.init(options: .weakMemory)
-    
-    init(_ asset: PHAsset) {
-        self.asset = asset
-        
-        self.mediaType = asset.zkMediaType
-        
+    init(model: ZKAssetModel) {
+        self.assetModel = model
         super.init()
-        if let picker = ZKPhotoPicker.current {
-            self.isSelected = picker.isAssetSelected(asset)
-        }
         
     }
     
-    func addSelectListener(_ listener: ZKPhotoAssetSelectedListener) {
-        self.listeners.add(listener)
+    func loadImage(result: @escaping (UIImage?, ZKFetchImageFail?) -> Void) {
+        self.assetModel.asset.zkFetchImage(targetSize: PHImageManagerMaximumSize, contentMode: .default, deliveryMode: .highQualityFormat, completeHandle: result)
     }
-    
-    func removeSelectListener(_ listener: ZKPhotoAssetSelectedListener) {
-        self.listeners.remove(listener)
-    }
-    
-    func fetchPhotoType(_ handle:@escaping (ZKAssetPhotoType) -> Void) {
-        DispatchQueue.global().async {
-            let type = self.asset.zkPhotoType
-            DispatchQueue.main.async {
-                handle(type)
-            }
-        }
-    }
-    
-    func selectTap() {
-        if let picker = ZKPhotoPicker.current {
-            if self.isSelected {
-                if let canDeselect = picker.delegate?.photoPicker?(picker: picker, canDeselectAsset: self.asset), !canDeselect {
-                    return
-                }
-                picker.didDeselect(asset: self.asset)
-            }
-            else {
-                if let canSelect = picker.delegate?.photoPicker?(picker: picker, canSelectAsset: self.asset), !canSelect {
-                    return
-                }
-                picker.didSelect(asset: self.asset)
-            }
-        }
-        self.isSelected = !self.isSelected
-        self.listeners.allObjects.forEach {
-            listener in
-            listener.assetSelectedChange(isSelected: self.isSelected)
-        }
-    }
-    
-    func requestThumbImage(_ result: @escaping (UIImage?, ZKFetchImageFail?) -> Void) {
-        if let picker = ZKPhotoPicker.current {
-            picker.cachingImageManager.getThumbImage(for: self.asset, result: result)
-        }
-    }
-
 }

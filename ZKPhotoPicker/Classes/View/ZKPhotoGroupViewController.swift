@@ -9,20 +9,28 @@
 import UIKit
 import Photos
 
-class ZKPhotoGroupViewController: UIViewController {
+class ZKPhotoGroupViewController: ZKBaseViewController {
 
-    private let groupManager: ZKPhotoGroupManager = .init()
+    private let groupManager: ZKPhotoGroupManager
     private lazy var tableView: UITableView = .init(frame: self.view.bounds, style: .plain)
     
+    init(picker: ZKPhotoPicker) {
+        self.groupManager = .init(picker: picker)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = ZKPhotoPicker.current?.config.mediaType.desc
-        self.view.backgroundColor = ZKPhotoPicker.current?.config.viewBackGroundColor
+        self.title = self.groupManager.picker.config.mediaType.desc
+        self.view.backgroundColor = self.groupManager.picker.config.viewBackGroundColor
         
-        self.toolbarItems = ZKPhotoPicker.current?.tbItems
+        self.toolbarItems = self.groupManager.picker.tbItems
         
-        self.tableView.backgroundColor = ZKPhotoPicker.current?.config.viewBackGroundColor
+        self.tableView.backgroundColor = self.groupManager.picker.config.viewBackGroundColor
         self.tableView.contentInsetAdjustmentBehavior = .never
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -31,21 +39,25 @@ class ZKPhotoGroupViewController: UIViewController {
         self.view.addSubview(self.tableView)
         
         self.navigationItem.leftBarButtonItem = .init(title: "取消", style: .plain, target: self, action: #selector(close))
-
-        self.groupManager.startCachingCollectionKeyThumbImages()
         
-        let defaultCollectionManager: ZKPhotoCollectionManager? = self.groupManager.collections.first(where: {
-            cmn in
-            if let picker = ZKPhotoPicker.current,
-                let isDefault = picker.delegate?.photoPicker?(picker: picker, isDefaultCollection: cmn.collection),
-                isDefault {
-                return true
-            }
-            return false
-        })
-        if let mn = defaultCollectionManager {
-            self.navigationController?.pushViewController(ZKPhotoCollectionListViewController.init(collectionManager: mn), animated: false)
+        self.showHud()
+        self.groupManager.requestCollections {
+            [weak self] in
+            self?.hideHud()
+            self?.tableView.reloadData()
         }
+        
+//        let defaultCollectionModel: ZKAssetCollectionModel? = self.groupManager.collectionModels.first(where: {
+//            model in
+//            if let isDefault = self.picker.delegate?.photoPicker?(picker: self.picker, isDefaultCollection: model.collection),
+//                isDefault {
+//                return true
+//            }
+//            return false
+//        })
+//        if let model = defaultCollectionModel {
+//            self.navigationController?.pushViewController(ZKPhotoCollectionListViewController.init(collectionManager: mn), animated: false)
+//        }
         
         // Do any additional setup after loading the view.
     }
@@ -58,7 +70,10 @@ class ZKPhotoGroupViewController: UIViewController {
     //MARK: - private method
     
     @objc private func close() {
-        ZKPhotoPicker.current?.cancelSelect()
+        self.groupManager.picker.dismiss(animated: true) {
+            
+            self.groupManager.picker.delegate?.photoPickerDidCancelPick?(picker: self.groupManager.picker)
+        }
     }
 
 
@@ -68,13 +83,13 @@ extension ZKPhotoGroupViewController: UITableViewDelegate, UITableViewDataSource
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.groupManager.collections.count
+        return self.groupManager.collectionModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ZKPhotoGroupTableViewCell
-        let collection = self.groupManager.collections[indexPath.row]
-        cell.collectionManager = collection
+        let model = self.groupManager.collectionModels[indexPath.row]
+        cell.loadCollectionModel(model)
         return cell
     }
     
@@ -84,7 +99,7 @@ extension ZKPhotoGroupViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        self.navigationController?.pushViewController(ZKPhotoCollectionListViewController.init(collectionManager: self.groupManager.collections[indexPath.row]), animated: true)
+        self.navigationController?.pushViewController(ZKPhotoCollectionListViewController.init(collectionModel: self.groupManager.collectionModels[indexPath.row]), animated: true)
     }
     
 }

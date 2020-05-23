@@ -10,7 +10,7 @@ import UIKit
 import Photos
 import FLAnimatedImage
 
-class ZKPhotoShowContentViewController: UIViewController {
+class ZKPhotoShowContentViewController: ZKBaseViewController {
     
     let index: Int
     let assetManager: ZKPhotoAssetManager
@@ -18,6 +18,9 @@ class ZKPhotoShowContentViewController: UIViewController {
     
     private var scrollView: UIScrollView!
     private(set) var imageView: FLAnimatedImageView!
+    
+    private var loadDataSuccess = false
+    private var loadPreviewImageHandle: ((UIImage?) -> Void)?
     
     var imageViewFrame: CGRect {
         return self.view.convert(self.imageView.frame, from: self.scrollView)
@@ -62,35 +65,37 @@ class ZKPhotoShowContentViewController: UIViewController {
         opt.isSynchronous = true
         opt.deliveryMode = .highQualityFormat
         opt.resizeMode = .fast
-        PHImageManager.default().requestImage(for: self.assetManager.asset, targetSize: .init(width: 200, height: 200), contentMode: .aspectFill, options: opt, resultHandler: {
-            img, info in
-            self.imageView.image = img
-            self.resizeImageView()
-        })
         
-        self.assetManager.fetchPhotoType({
-            photoType in
-            if photoType == .gif {
-
-                PHImageManager.default().requestImageData(for: self.assetManager.asset, options: nil, resultHandler: {
-                    data, uti, orientation, info in
-                    self.imageView.animatedImage = .init(gifData: data)
+        if self.assetManager.assetModel.photoType == .gif {
+            PHImageManager.default().requestImageData(for: self.assetManager.assetModel.asset, options: nil, resultHandler: {
+                data, uti, orientation, info in
+                self.imageView.animatedImage = .init(gifData: data)
+                self.resizeImageView()
+                self.loadDataSuccess = true
+                self.loadPreviewImageHandle?(self.imageView.image)
+                self.loadPreviewImageHandle = nil
+            })
+        }
+        else {
+            self.assetManager.loadImage(result: {
+                img, err in
+                if let image = img {
+                    self.imageView.image = image
                     self.resizeImageView()
-                })
-            }
-            else {
-
-                self.assetManager.asset.zkFetchImage(targetSize: .zero, contentMode: .default) { (image, err) in
-                    if let image = image {
-                        self.imageView.image = image
-                        self.resizeImageView()
-                    }
+                    self.loadDataSuccess = true
                 }
-            }
-        })
-        
-        
-        
+                self.loadPreviewImageHandle?(img)
+                self.loadPreviewImageHandle = nil
+            })
+        }
+    }
+    
+    func loadPreviewImage2Push(complete: @escaping (UIImage?) -> Void) {
+        if self.loadDataSuccess {
+            complete(self.imageView.image)
+        } else {
+            self.loadPreviewImageHandle = complete
+        }
     }
     
     func canStartSwipe2Close(pan: UIPanGestureRecognizer) -> Bool {
@@ -106,14 +111,14 @@ class ZKPhotoShowContentViewController: UIViewController {
     //MARK: - target action
     
     @objc func singleTap() {
-        if let hidden = self.navigationController?.isNavigationBarHidden, hidden == true {
-            self.navigationController?.isNavigationBarHidden = false
-            self.navigationController?.isToolbarHidden = false
-            self.pageVC.view.backgroundColor = ZKPhotoPicker.current?.config.viewBackGroundColor
+        if let alpha = self.navigationController?.navigationBar.alpha, alpha == 0 {
+            self.navigationController?.navigationBar.alpha = 1
+            self.navigationController?.toolbar.alpha = 1
+            self.pageVC.view.backgroundColor = self.assetManager.picker.config.viewBackGroundColor
         }
         else {
-            self.navigationController?.isNavigationBarHidden = true
-            self.navigationController?.isToolbarHidden = true
+            self.navigationController?.navigationBar.alpha = 0
+            self.navigationController?.toolbar.alpha = 0
             self.pageVC.view.backgroundColor = .black
         }
     }

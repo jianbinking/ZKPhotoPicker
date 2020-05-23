@@ -11,39 +11,33 @@ import Photos
 
 class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelegate, ZKPhotoAssetSelectedListener {
     
-    var img: UIImage? = UIImage.zkDefaultImage {
-        didSet {
-            self.setNeedsDisplay()
-        }
-    }
+    let imgvThumb = UIImageView()
     let lblPhotoTag = UILabel()
     let btnSelect = UIButton.init(type: .custom)
-    var assetManager: ZKPhotoAssetManager? {
+    var assetModel: ZKAssetModel? {
         didSet {
-            if let mn = self.assetManager {
-                self.assetManager?.fetchPhotoType({ (type) in
-                    self.lblPhotoTag.text = type.desc
-                    self.lblPhotoTag.isHidden = !(mn.mediaType == .photo && type != .staticPhoto)
-                    self.setNeedsLayout()
-                })
-                mn.addSelectListener(self)
-                ZKPhotoPicker.current?.cachingImageManager.getThumbImage(for: mn.asset, result: {
-                    img, err in
-                    self.img = img
-                    self.setNeedsDisplay()
-                })
+            self.btnSelect.setImage(self.assetModel?.picker.config.selectTagImageN, for: .normal)
+            self.btnSelect.setImage(self.assetModel?.picker.config.selectTagImageS, for: .selected)
+            self.imgvThumb.image = self.assetModel?.defaultImage
+            self.assetModel?.loadThumbImage(result: {
+                [weak self] img, err in
+                self?.imgvThumb.image = img
+            })
+            self.assetModel?.addSelectListener(self)
+            if let photoType = self.assetModel?.photoType {
+                self.lblPhotoTag.text = photoType.desc
+                self.lblPhotoTag.isHidden = photoType == .staticPhoto
             }
-            
         }
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.imgvThumb.frame = self.bounds
+        self.contentView.addSubview(self.imgvThumb)
         self.btnSelect.frame = .init(x: 0, y: 0, width: 20, height: 20)
         self.contentView.addSubview(self.btnSelect)
         self.btnSelect.addTarget(self, action: #selector(selectButtonTapped(_:)), for: .touchUpInside)
-        self.btnSelect.setImage(ZKPhotoPicker.current?.config.selectTagImageN, for: .normal)
-        self.btnSelect.setImage(ZKPhotoPicker.current?.config.selectTagImageS, for: .selected)
         self.contentView.addSubview(self.lblPhotoTag)
         self.lblPhotoTag.textColor = .white
         self.lblPhotoTag.font = .systemFont(ofSize: 10)
@@ -59,7 +53,7 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
     }
     
     @objc func selectButtonTapped(_ btn: UIButton) {
-        self.assetManager?.selectTap()
+        self.assetModel?.selectTap()
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -71,36 +65,28 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        guard let img = self.img else {
-            return
-        }
         
         let ctx = UIGraphicsGetCurrentContext()!
         ctx.saveGState()
-        ZKPhotoPicker.current?.config.viewBackGroundColor.setFill()
+        self.assetModel?.picker.config.viewBackGroundColor.setFill()
         ctx.fill(rect)
         ctx.restoreGState()
         
-        
-        img.draw(in: rect.aspectFillRect(for: img.size))
-        
-        if let picker = ZKPhotoPicker.current {
-            if picker.isAssetSelected(self.assetManager!.asset) {
-                picker.config.selectTagColor.setStroke()
-                ctx.setLineWidth(8)
-                ctx.stroke(rect)
-                self.btnSelect.isSelected = true
-            }
-            else {
-                self.btnSelect.isSelected = false
-            }
+        if let model = self.assetModel, model.isSelected {
+            self.imgvThumb.layer.borderColor = model.picker.config.selectTagColor.cgColor
+            self.imgvThumb.layer.borderWidth = 4
+            self.btnSelect.isSelected = true
+        }
+        else {
+            self.imgvThumb.layer.borderWidth = 0
+            self.btnSelect.isSelected = false
         }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        if let config = ZKPhotoPicker.current?.config {
+        if let config = self.assetModel?.picker.config {
             var rc = self.btnSelect.bounds
             switch config.selectTagPosition {
             case .topLeft:

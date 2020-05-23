@@ -15,11 +15,11 @@ class ZKPhotoCollectionFlowLayout: UICollectionViewFlowLayout {
     var itemCount: Int = 0
     
     weak var delegate: ZKPhotoPickerDelegate?
-    weak var collection: PHAssetCollection?
+    unowned let collectionModel: ZKAssetCollectionModel
     
-    init(collection: PHAssetCollection) {
-        self.delegate = ZKPhotoPicker.current?.delegate
-        self.collection = collection
+    init(collectionModel: ZKAssetCollectionModel) {
+        self.delegate = collectionModel.picker.delegate
+        self.collectionModel = collectionModel
         super.init()
         self.minimumInteritemSpacing = 10
         self.minimumLineSpacing = 10
@@ -35,15 +35,14 @@ class ZKPhotoCollectionFlowLayout: UICollectionViewFlowLayout {
         super.prepare()
         
         if let collectionView = self.collectionView,
-            let delegate = self.delegate,
-            let collection = self.collection {
-            if let space = delegate.mininumColumnSpace?(in: collection) {
+            let delegate = self.delegate {
+            if let space = delegate.mininumColumnSpace?(in: collectionModel.collection) {
                 self.minimumInteritemSpacing = space
             }
-            if let space = delegate.mininumLineSpacing?(in: collection) {
+            if let space = delegate.mininumLineSpacing?(in: collectionModel.collection) {
                 self.minimumLineSpacing = space
             }
-            if let insets = delegate.sectionInset?(in: collection) {
+            if let insets = delegate.sectionInset?(in: collectionModel.collection) {
                 self.sectionInset = insets
             }
             var itemWidth: Int = Int(ZKPhotoCollectionItemWidth)

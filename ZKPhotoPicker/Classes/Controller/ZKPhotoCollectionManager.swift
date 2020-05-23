@@ -11,46 +11,56 @@ import Photos
 
 class ZKPhotoCollectionManager: NSObject {
     
-    let collection: PHAssetCollection
+    let collectionModel: ZKAssetCollectionModel
+    var picker: ZKPhotoPicker {
+        return self.collectionModel.picker
+    }
+    var assetModels: [ZKAssetModel] = []
     
-    public private(set) var assetsManagers: [ZKPhotoAssetManager] = []
-    
-    init(collection : PHAssetCollection) {
-        self.collection = collection
+    init(model : ZKAssetCollectionModel) {
+        self.collectionModel = model
         super.init()
-        if let currentPicker = ZKPhotoPicker.current {
-            let res = PHAsset.fetchAssets(in: collection, options: nil)
-            res.enumerateObjects { (asset, idx, isStop) in
-                if let shouldHide = currentPicker.delegate?.photoPicker?(picker: currentPicker, assetShouldHide: asset, in: collection) {
+        self.startCachingThumbImage()
+    }
+    
+    deinit {
+        print("ZKPhotoCollectionManager\(collectionModel.title)释放")
+        self.stopCachingThumbImage()
+    }
+    
+    private func startCachingThumbImage() {
+        print("开始缓存\(collectionModel.title)")
+        picker.cachingImageManager.startCachingThumbImage(for: self.assetModels.map{$0.asset})
+    }
+    
+    private func stopCachingThumbImage() {
+        print("停止缓存\(collectionModel.title)")
+        picker.cachingImageManager.stopCachingThumbImage(for: self.assetModels.map{$0.asset})
+    }
+    
+    func requestAssets(completion: @escaping () -> Void) {
+        DispatchQueue.global().async {
+            let res = PHAsset.fetchAssets(in: self.collectionModel.collection, options: nil)
+            res.enumerateObjects({
+                asset, idx, isStop in
+                if let shouldHide = self.picker.delegate?.photoPicker?(picker: self.picker, assetShouldHide: asset, in: self.collectionModel.collection) {
                     if shouldHide {
                         return
                     }
                 }
-                if asset.zkMediaType != currentPicker.config.mediaType {
+                if asset.zkMediaType != self.picker.config.mediaType {
                     return
                 }
-                self.assetsManagers.append(.init(asset))
+                self.assetModels.append(.init(asset: asset, picker: self.picker))
+            })
+            DispatchQueue.main.async {
+                completion()
             }
-        }
-        
-    }
-    
-    func startCachingThumbImage() {
-        print("开始缓存\(collection.localizedTitle ?? "")")
-        if let picker = ZKPhotoPicker.current {
-            picker.cachingImageManager.startCachingThumbImage(for: self.assetsManagers.map{$0.asset})
-        }
-    }
-    
-    func stopCachingThumbImage() {
-        print("停止缓存\(collection.localizedTitle ?? "")")
-        if let picker = ZKPhotoPicker.current {
-            picker.cachingImageManager.stopCachingThumbImage(for: self.assetsManagers.map{$0.asset})
         }
     }
     
     func requestKeyThumbImage(_ result: @escaping (UIImage?, ZKFetchImageFail?) -> Void) {
-        if let picker = ZKPhotoPicker.current, let asset = self.keyAsset {
+        if let asset = self.keyAsset {
             picker.cachingImageManager.getThumbImage(for: asset, result: result)
         }
         else {
@@ -63,15 +73,14 @@ class ZKPhotoCollectionManager: NSObject {
 
 extension ZKPhotoCollectionManager {
     
-    var itemCount: Int {
-        return self.assetsManagers.count
+    var assetCount: Int {
+        return self.collectionModel.assetCount
     }
     var keyAsset: PHAsset? {
-        let res = PHAsset.fetchKeyAssets(in: self.collection, options: nil)
-        return res?.firstObject
+        return self.collectionModel.keyAsset
     }
     
-    var desc: String {
-        return self.collection.assetCollectionSubtype == .smartAlbumUserLibrary ? "全部照片" : self.collection.localizedTitle ?? ""
+    var title: String {
+        return self.collectionModel.title
     }
 }

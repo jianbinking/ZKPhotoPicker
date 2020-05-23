@@ -168,23 +168,3 @@ extension PHImageRequestOptions {
         return opt
     }
 }
-
-extension UIImage {
-    static var zkDefaultImage: UIImage? {
-
-        var bundle: Bundle?
-        if let customBundlePath = ZKPhotoPicker.current?.config.customBundlePath {
-            bundle = Bundle.init(path: customBundlePath)
-        }
-        else {
-            let mainBundle = Bundle.init(for: ZKPhotoPicker.self)
-            if let path = mainBundle.path(forResource: "ZKPhotoPicker", ofType: "bundle") {
-                bundle = Bundle.init(path: path)
-            }
-        }
-        if let imgPath = bundle?.path(forResource: "image_placeholder", ofType: "png") {
-            return UIImage.init(contentsOfFile: imgPath)
-        }
-        return nil
-    }
-}
