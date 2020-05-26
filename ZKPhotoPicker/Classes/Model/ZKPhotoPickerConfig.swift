@@ -25,6 +25,8 @@ public class ZKPhotoPickerConfig: NSObject {
     lazy var selectTagImageN: UIImage = self.createCheckImage(isSelected: false)
     lazy var selectTagImageS: UIImage = self.createCheckImage(isSelected: true)
     
+    lazy var videoTagImage: UIImage = self.loadBundleImage(for: "image_videotag")
+    
     public override init() {
         super.init()
         if #available(iOS 13.0, *) {
@@ -32,6 +34,18 @@ public class ZKPhotoPickerConfig: NSObject {
             self.viewBackGroundColor = .systemBackground
             self.viewBackGroundReverseColor = .label
             selectTagColor = .systemBlue
+        }
+    }
+    
+    func loadBundleImage(for name: String) -> UIImage {
+        if let customBundlePath = self.customBundlePath, let bundle = Bundle.init(path: customBundlePath), let imgPath = bundle.path(forResource: name, ofType: "png"), let img = UIImage.init(contentsOfFile: imgPath) {
+            return img
+        }
+        else {
+            let customBundlePath = Bundle.init(for: ZKPhotoPicker.self).path(forResource: "ZKPhotoPicker", ofType: "bundle")!
+            let bundle = Bundle.init(path: customBundlePath)!
+            let imgPath = bundle.path(forResource: name, ofType: "png")!
+            return UIImage.init(contentsOfFile: imgPath)!
         }
     }
 

@@ -37,15 +37,16 @@ class ZKPhotoShowInteractivePopTransition: UIPercentDrivenInteractiveTransition 
     override func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
         self.transCtx = transitionContext
         transitionContext.containerView.insertSubview(transitionContext.view(forKey: .to)!, at: 0)
+        self.contentVC.contentView.isHidden = true
         self.pageVC.view.isHidden = true
         self.bgView.frame = self.pageVC.view.bounds
         self.bgView.backgroundColor = self.pageVC.view.backgroundColor
         self.imgvTemp.frame = self.contentVC.imageViewFrame
         if self.contentVC.assetManager.assetModel.photoType == .gif {
-            self.imgvTemp.animatedImage = self.contentVC.imageView.animatedImage
+            self.imgvTemp.animatedImage = (self.contentVC as! ZKPhotoShowImageContentViewController).imageView.animatedImage
         }
         else {
-            self.imgvTemp.image = self.contentVC.imageView.image
+            self.imgvTemp.image = self.contentVC.previewImage
         }
         self.ptImgvStartCenter = self.imgvTemp.center
         transitionContext.containerView.addSubview(self.bgView)
@@ -75,8 +76,8 @@ class ZKPhotoShowInteractivePopTransition: UIPercentDrivenInteractiveTransition 
             self.bgView.alpha = scale
             self.update(1 - scale)
             if self.animateNavToolBar {
-                self.collectionVC?.navigationController?.navigationBar.alpha = 1 - scale
-                self.collectionVC?.navigationController?.toolbar.alpha = 1 - scale
+                self.collectionVC?.navigationController?.navigationBar.alpha = (1 - scale) * 2
+                self.collectionVC?.navigationController?.toolbar.alpha = (1 - scale) * 2
             }
         case .ended:
             self.isInteractive = false
@@ -138,6 +139,7 @@ class ZKPhotoShowInteractivePopTransition: UIPercentDrivenInteractiveTransition 
             self.imgvTemp.removeFromSuperview()
             self.bgView.removeFromSuperview()
             self.pageVC.view.isHidden = false
+            self.contentVC.contentView.isHidden = false
             self.transCtx.completeTransition(!self.transCtx.transitionWasCancelled)
             
         })

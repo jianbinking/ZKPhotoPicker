@@ -25,16 +25,16 @@ class ZKPhotoCollectionListViewController: ZKBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = self.manager.picker.config.viewBackGroundColor
+        self.view.backgroundColor = self.manager.picker?.config.viewBackGroundColor
         self.title = self.manager.title
         
-        self.toolbarItems = self.manager.picker.tbItems
+        self.toolbarItems = self.manager.picker!.tbItems
         
         let flowLayout = ZKPhotoCollectionFlowLayout.init(collectionModel: self.manager.collectionModel)
         flowLayout.itemCount = self.manager.assetCount
         
         self.collectionView = UICollectionView.init(frame: self.view.bounds.inset(by: self.view.safeAreaInsets), collectionViewLayout: flowLayout)
-        self.collectionView.backgroundColor = self.manager.picker.config.viewBackGroundColor
+        self.collectionView.backgroundColor = self.manager.picker?.config.viewBackGroundColor
         self.collectionView.contentInsetAdjustmentBehavior = .never
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -53,7 +53,9 @@ class ZKPhotoCollectionListViewController: ZKBaseViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        self.collectionView.frame = self.view.bounds.inset(by: self.view.safeAreaInsets)
+        if (self.navigationController?.navigationBar.alpha ?? 0) > 0 {
+            self.collectionView.frame = self.view.bounds.inset(by: self.view.safeAreaInsets)
+        }
     }
 
 }
@@ -71,7 +73,7 @@ extension ZKPhotoCollectionListViewController : UICollectionViewDelegate, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        if let insets = self.manager.picker.delegate?.sectionInset?(in: self.manager.collectionModel.collection) {
+        if let insets = self.manager.picker?.delegate?.sectionInset?(in: self.manager.collectionModel.collection) {
             return insets
         }
         return .init(top: 10, left: 10, bottom: 10, right: 10)
@@ -103,15 +105,15 @@ extension ZKPhotoCollectionListViewController: ZKPhotoShowDataSourceAndDelegate 
     }
     
     func pageVC(_ pageVC: ZKPhotoShowPageViewController, didScroll2Index idx: Int) {
-        //这个visibleItems里木有顺序，所以要先排下序，比较最大最小值
-        let sortedIndexPaths = self.collectionView.indexPathsForVisibleItems.sorted(by: {$0<$1})
-        //如果超出顶部，移动collectionview到顶
-        if let topIndexPath = sortedIndexPaths.first, idx < topIndexPath.item {
-            self.collectionView.scrollToItem(at: .init(item: idx, section: 0), at: .top, animated: false)
-        }
-        //超出底部，移动collectionview到底
-        else if let bottomIndexPath = sortedIndexPaths.last, idx > bottomIndexPath.item {
-            self.collectionView.scrollToItem(at: .init(item: idx, section: 0), at: .bottom, animated: true)
+        if var frame = self.collectionView.layoutAttributesForItem(at: .init(item: idx, section: 0))?.frame {
+
+            frame = self.view.convert(frame, from: self.collectionView)
+            if frame.minY < self.collectionView.frame.minY {
+                self.collectionView.scrollToItem(at: .init(item: idx, section: 0), at: .top, animated: false)
+            }
+            else if frame.maxY > self.collectionView.frame.maxY {
+                self.collectionView.scrollToItem(at: .init(item: idx, section: 0), at: .bottom, animated: false)
+            }
         }
     }
     

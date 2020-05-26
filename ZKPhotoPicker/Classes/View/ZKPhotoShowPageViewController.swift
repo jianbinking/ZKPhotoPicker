@@ -85,7 +85,7 @@ class ZKPhotoShowPageViewController: UIPageViewController {
             return
         }
         
-        let startVC = ZKPhotoShowContentViewController.init(index: self.currentIndex, assetManager: .init(model: assetModel), pageVC: self)
+        let startVC = ZKPhotoShowContentViewController.contentVCWith(index: self.currentIndex, assetManager: .init(model: assetModel), pageVC: self)
         self.setViewControllers([startVC], direction: .forward, animated: false, completion: nil)
         self.currentAssetManager = startVC.assetManager
         
@@ -135,7 +135,7 @@ extension ZKPhotoShowPageViewController: UIPageViewControllerDataSource, UIPageV
             let preModel = self.showDS_D?.assetModelAt(index: preIdx) else {
             return nil
         }
-        return ZKPhotoShowContentViewController.init(index: preIdx, assetManager: .init(model: preModel), pageVC: self)
+        return ZKPhotoShowContentViewController.contentVCWith(index: preIdx, assetManager: .init(model: preModel), pageVC: self)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
@@ -146,7 +146,7 @@ extension ZKPhotoShowPageViewController: UIPageViewControllerDataSource, UIPageV
             let nextModel = self.showDS_D?.assetModelAt(index: nextIdx) else {
             return nil
         }
-        return ZKPhotoShowContentViewController.init(index: nextIdx, assetManager: .init(model: nextModel), pageVC: self)
+        return ZKPhotoShowContentViewController.contentVCWith(index: nextIdx, assetManager: .init(model: nextModel), pageVC: self)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {

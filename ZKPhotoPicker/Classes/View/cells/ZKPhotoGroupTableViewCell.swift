@@ -29,8 +29,8 @@ class ZKPhotoGroupTableViewCell: UITableViewCell {
     }
     
     func loadCollectionModel(_ model: ZKAssetCollectionModel) {
-        self.backgroundColor = model.picker.config.viewBackGroundColor
-        self.lblDesc.textColor = model.picker.config.textColor
+        self.backgroundColor = model.picker?.config.viewBackGroundColor
+        self.lblDesc.textColor = model.picker?.config.textColor
         self.lblDesc.text = "\(model.title)(\(model.assetCount))"
         self.imgvThumb.image = model.defaultImage
         model.loadThumbImage(result: {

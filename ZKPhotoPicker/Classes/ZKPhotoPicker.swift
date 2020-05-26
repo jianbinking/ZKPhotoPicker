@@ -12,6 +12,8 @@ import Photos
 
 private var _currentPicker: ZKPhotoPicker?
 
+
+
 public class ZKPhotoPicker: UIViewController {
     
     public var selectedAssets: [PHAsset] = [] {
@@ -32,15 +34,7 @@ public class ZKPhotoPicker: UIViewController {
     public init(_ config: ZKPhotoPickerConfig) {
         self.config = config
         //读取自定义bundle里的image
-        if let customBundlePath = config.customBundlePath, let bundle = Bundle.init(path: customBundlePath), let imgPath = bundle.path(forResource: "image_placeholder", ofType: "png"), let img = UIImage.init(contentsOfFile: imgPath) {
-            defaultImage = img
-        }
-        else {
-            let customBundlePath = Bundle.init(for: ZKPhotoPicker.self).path(forResource: "ZKPhotoPicker", ofType: "bundle")!
-            let bundle = Bundle.init(path: customBundlePath)!
-            let imgPath = bundle.path(forResource: "image_placeholder", ofType: "png")!
-            defaultImage = UIImage.init(contentsOfFile: imgPath)!
-        }
+        defaultImage = config.loadBundleImage(for: "image_placeholder")
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .fullScreen
         self.barBtnCount.target = self

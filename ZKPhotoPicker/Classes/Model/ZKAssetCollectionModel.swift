@@ -16,9 +16,9 @@ class ZKAssetCollectionModel: NSObject {
     let assetCount: Int
     let title: String
     var defaultImage: UIImage {
-        return self.picker.defaultImage
+        return self.picker!.defaultImage
     }
-    unowned let picker: ZKPhotoPicker
+    weak var picker: ZKPhotoPicker?
     
     
     init(collection: PHAssetCollection, picker: ZKPhotoPicker) {
@@ -35,7 +35,7 @@ class ZKAssetCollectionModel: NSObject {
                     return
                 }
             }
-            if asset.zkMediaType != picker.config.mediaType {
+            if !picker.config.mediaType.contains(asset.zkMediaType) {
                 return
             }
             count += 1
@@ -45,7 +45,7 @@ class ZKAssetCollectionModel: NSObject {
     }
     
     func loadThumbImage(result: @escaping (UIImage?, ZKFetchImageFail?) -> Void) {
-        self.picker.cachingImageManager.getThumbImage(for: self.keyAsset, result: result)
+        self.picker?.cachingImageManager.getThumbImage(for: self.keyAsset, result: result)
     }
     
 }

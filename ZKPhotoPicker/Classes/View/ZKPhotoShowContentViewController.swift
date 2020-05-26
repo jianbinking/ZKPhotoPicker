@@ -8,7 +8,9 @@
 
 import UIKit
 import Photos
+import PhotosUI
 import FLAnimatedImage
+import AVFoundation
 
 class ZKPhotoShowContentViewController: ZKBaseViewController {
     
@@ -16,17 +18,39 @@ class ZKPhotoShowContentViewController: ZKBaseViewController {
     let assetManager: ZKPhotoAssetManager
     unowned var pageVC: ZKPhotoShowPageViewController
     
-    private var scrollView: UIScrollView!
-    private(set) var imageView: FLAnimatedImageView!
+    fileprivate var scrollView: UIScrollView!
+    var previewImage: UIImage?
+    var contentElementSize: CGSize?
+    var contentView: UIView {
+        fatalError("子类必须实现")
+    }
+    private(set) var layer: CALayer?
     
-    private var loadDataSuccess = false
-    private var loadPreviewImageHandle: ((UIImage?) -> Void)?
+    fileprivate var loadPreviewImageHandle: ((UIImage?) -> Void)?
     
     var imageViewFrame: CGRect {
-        return self.view.convert(self.imageView.frame, from: self.scrollView)
+        return self.view.convert(self.contentView.frame, from: self.scrollView)
     }
     
-    init(index: Int, assetManager: ZKPhotoAssetManager, pageVC: ZKPhotoShowPageViewController) {
+    static func contentVCWith(index: Int, assetManager: ZKPhotoAssetManager, pageVC: ZKPhotoShowPageViewController) -> ZKPhotoShowContentViewController {
+        
+        var contentVC: ZKPhotoShowContentViewController!
+        
+        switch assetManager.assetModel.mediaType {
+        case .video:
+            contentVC = ZKPhotoShowVideoContentViewController.init(index: index, assetManager: assetManager, pageVC: pageVC)
+        default:
+            switch assetManager.assetModel.photoType {
+            case .livePhoto:
+                contentVC = ZKPhotoShowLivePhotoContentViewController.init(index: index, assetManager: assetManager, pageVC: pageVC)
+            default:
+                contentVC = ZKPhotoShowImageContentViewController.init(index: index, assetManager: assetManager, pageVC: pageVC)
+            }
+        }
+        return contentVC
+    }
+    
+    fileprivate init(index: Int, assetManager: ZKPhotoAssetManager, pageVC: ZKPhotoShowPageViewController) {
         self.index = index
         self.assetManager = assetManager
         self.pageVC = pageVC
@@ -51,8 +75,7 @@ class ZKPhotoShowContentViewController: ZKBaseViewController {
         self.scrollView.delegate = self
         self.view.addSubview(self.scrollView)
         
-        self.imageView = FLAnimatedImageView.init()
-        self.scrollView.addSubview(self.imageView)
+        self.scrollView.addSubview(self.contentView)
         
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(singleTap))
         self.view.addGestureRecognizer(tap)
@@ -66,33 +89,25 @@ class ZKPhotoShowContentViewController: ZKBaseViewController {
         opt.deliveryMode = .highQualityFormat
         opt.resizeMode = .fast
         
-        if self.assetManager.assetModel.photoType == .gif {
-            PHImageManager.default().requestImageData(for: self.assetManager.assetModel.asset, options: nil, resultHandler: {
-                data, uti, orientation, info in
-                self.imageView.animatedImage = .init(gifData: data)
-                self.resizeImageView()
-                self.loadDataSuccess = true
-                self.loadPreviewImageHandle?(self.imageView.image)
-                self.loadPreviewImageHandle = nil
-            })
-        }
-        else {
-            self.assetManager.loadImage(result: {
-                img, err in
-                if let image = img {
-                    self.imageView.image = image
-                    self.resizeImageView()
-                    self.loadDataSuccess = true
-                }
-                self.loadPreviewImageHandle?(img)
-                self.loadPreviewImageHandle = nil
-            })
-        }
+        self.loadPreviewImage()
+    }
+    
+    fileprivate func loadPreviewImage() {
+        self.assetManager.loadImage(result: {
+            img, err in
+            if let image = img {
+                self.contentElementSize = image.size
+                self.previewImage = image
+                self.resizeContentView()
+            }
+            self.loadPreviewImageHandle?(img)
+            self.loadPreviewImageHandle = nil
+        })
     }
     
     func loadPreviewImage2Push(complete: @escaping (UIImage?) -> Void) {
-        if self.loadDataSuccess {
-            complete(self.imageView.image)
+        if let previewImage = self.previewImage {
+            complete(previewImage)
         } else {
             self.loadPreviewImageHandle = complete
         }
@@ -134,45 +149,131 @@ class ZKPhotoShowContentViewController: ZKBaseViewController {
     
     //MARK: - private method
     
-    private func resizeImageView() {
-        if let imgSize = self.imageView.image?.size {
+    fileprivate func resizeContentView() {
+        if let imgSize = self.contentElementSize {
             self.scrollView.zoomScale = self.scrollView.minimumZoomScale
             let scale = max(imgSize.width / self.scrollView.bounds.width, imgSize.height / self.scrollView.bounds.height)
             var xoff = (self.scrollView.bounds.width - imgSize.width / scale) / 2
             var yoff = (self.scrollView.bounds.height - imgSize.height / scale) / 2
             xoff = max(xoff, 0)
             yoff = max(yoff, 0)
-            self.imageView.frame = .init(x: xoff, y: yoff, width: imgSize.width / scale, height: imgSize.height / scale)
-            self.scrollView.maximumZoomScale = max(self.scrollView.bounds.width / self.imageView.frame.width, 2)
+            self.contentView.frame = .init(x: xoff, y: yoff, width: imgSize.width / scale, height: imgSize.height / scale)
+            self.scrollView.maximumZoomScale = max(self.scrollView.bounds.width / self.contentView.frame.width, 2)
         }
-    }
-    
-    private func createPreVCSnapshot() -> UIImage {
-        let imgSize = self.view.bounds.size * UIScreen.main.scale
-        UIGraphicsBeginImageContext(imgSize)
-        var vcs = self.navigationController?.viewControllers
-        _ = vcs?.popLast()
-        if let preVC = vcs?.popLast() {
-            preVC.view.drawHierarchy(in: .init(origin: .zero, size: imgSize), afterScreenUpdates: true)
-        }
-        let img = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return img
     }
 }
 
 extension ZKPhotoShowContentViewController: UIScrollViewDelegate {
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return self.imageView
+        return self.contentView
     }
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        var xoff = (scrollView.bounds.width - self.imageView.frame.width) / 2
+        var xoff = (scrollView.bounds.width - self.contentView.frame.width) / 2
         xoff = max(xoff, 0)
-        var yoff = (scrollView.bounds.height - self.imageView.frame.height) / 2
+        var yoff = (scrollView.bounds.height - self.contentView.frame.height) / 2
         yoff = max(yoff, 0)
-        self.imageView.frame = .init(origin: .init(x: xoff, y: yoff), size: self.imageView.frame.size)
+        self.contentView.frame = .init(origin: .init(x: xoff, y: yoff), size: self.contentView.frame.size)
     }
+    
+}
+
+class ZKPhotoShowImageContentViewController: ZKPhotoShowContentViewController {
+    
+    let imageView: FLAnimatedImageView = .init()
+    override var previewImage: UIImage? {
+        willSet {
+            if self.assetManager.assetModel.photoType == .staticPhoto {
+                self.imageView.image = newValue
+            }
+        }
+    }
+    override var contentView: UIView {
+        return self.imageView
+    }
+    
+    override func loadPreviewImage() {
+        if self.assetManager.assetModel.photoType == .gif {
+            PHImageManager.default().requestImageData(for: self.assetManager.assetModel.asset, options: nil, resultHandler: {
+                data, uti, orientation, info in
+                let img = FLAnimatedImage.init(gifData: data)
+                self.imageView.animatedImage = img
+                self.previewImage = img?.posterImage
+                self.contentElementSize = img?.size
+                self.resizeContentView()
+                self.loadPreviewImageHandle?(self.imageView.image)
+                self.loadPreviewImageHandle = nil
+            })
+        }
+        else {
+            super.loadPreviewImage()
+        }
+    }
+}
+
+class ZKPhotoShowLivePhotoContentViewController: ZKPhotoShowContentViewController, PHLivePhotoViewDelegate {
+    
+    let livePhotoView: PHLivePhotoView = .init()
+    override var contentView: UIView {
+        return self.livePhotoView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.livePhotoView.delegate = self
+        self.startPlayLivePhoto()
+        
+    }
+    
+    private func startPlayLivePhoto() {
+        self.assetManager.loadLivePhoto(result: {
+            livePhoto, err in
+            self.livePhotoView.livePhoto = livePhoto
+            self.livePhotoView.startPlayback(with: .full)
+        })
+    }
+    
+    func livePhotoView(_ livePhotoView: PHLivePhotoView, didEndPlaybackWith playbackStyle: PHLivePhotoViewPlaybackStyle) {
+        livePhotoView.startPlayback(with: .full)
+    }
+    
+}
+
+class ZKPhotoShowVideoContentViewController: ZKPhotoShowContentViewController {
+    
+    let playerView = UIView()
+    var player: AVPlayer?
+    private(set) var avplayerLayer: AVPlayerLayer?
+    override var contentView: UIView {
+        return self.playerView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.assetManager.loadPlayerItem(result: {
+            item, err in
+            if let item = item {
+                self.player = .init(playerItem: item)
+                self.avplayerLayer = .init(player: self.player)
+                self.view.setNeedsLayout()
+                self.startPlay()
+            }
+        })
+    }
+    
+    private func startPlay() {
+        if let layer = self.avplayerLayer {
+            self.playerView.layer.addSublayer(layer)
+            self.player?.play()
+        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.avplayerLayer?.bounds = self.playerView.bounds
+        self.avplayerLayer?.position = .init(x: self.playerView.bounds.width / 2, y: self.playerView.bounds.height / 2)
+    }
+    
     
 }

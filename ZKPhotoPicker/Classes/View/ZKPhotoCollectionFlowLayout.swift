@@ -18,7 +18,7 @@ class ZKPhotoCollectionFlowLayout: UICollectionViewFlowLayout {
     unowned let collectionModel: ZKAssetCollectionModel
     
     init(collectionModel: ZKAssetCollectionModel) {
-        self.delegate = collectionModel.picker.delegate
+        self.delegate = collectionModel.picker?.delegate
         self.collectionModel = collectionModel
         super.init()
         self.minimumInteritemSpacing = 10

@@ -20,17 +20,19 @@ class ZKAssetModel: NSObject {
     let asset: PHAsset
     unowned let picker: ZKPhotoPicker
     let mediaType: ZKAssetMediaType
-    var photoType: ZKAssetPhotoType
+    let photoType: ZKAssetPhotoType
     var defaultImage: UIImage {
         return self.picker.defaultImage
     }
     var isSelected: Bool
+    let videoSeconds: Int
     
     private let listeners = NSHashTable<ZKPhotoAssetSelectedListener>.init(options: .weakMemory)
     
     init(asset: PHAsset, picker: ZKPhotoPicker) {
         self.asset = asset
         self.picker = picker
+        self.videoSeconds = Int(asset.duration)
         if asset.mediaType == .video {
             self.mediaType = .video
             self.photoType = .staticPhoto

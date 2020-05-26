@@ -83,7 +83,7 @@ class ZKPhotoShowTransition: NSObject, UIViewControllerAnimatedTransitioning {
             let bgView = UIView.init(frame: container.bounds)
             bgView.backgroundColor = pageVC.view.backgroundColor
             let imgvTemp = UIImageView.init(frame: startFrame)
-            imgvTemp.image = contentVC.imageView.image
+            imgvTemp.image = contentVC.previewImage
             let mask = UIView.init(frame: imgvTemp.bounds)
             mask.backgroundColor = .black
             imgvTemp.mask = mask

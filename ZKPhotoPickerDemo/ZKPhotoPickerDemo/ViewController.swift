@@ -26,8 +26,9 @@ class ViewController: UIViewController {
     }
     
     @objc func test() {
-        
-        ZKPhotoPicker.showPickerView(in: self, delegate: self, selectedAssets: self.selectedAssets) { (status) in
+        let cfg = ZKPhotoPickerConfig.init()
+        cfg.mediaType = [.video, .photo]
+        ZKPhotoPicker.showPickerView(in: self, delegate: self, config: cfg, selectedAssets: self.selectedAssets) { (status) in
             
         }
     }

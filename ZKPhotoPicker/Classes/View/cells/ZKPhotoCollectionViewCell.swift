@@ -13,20 +13,24 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
     
     let imgvThumb = UIImageView()
     let lblPhotoTag = UILabel()
+    let imgvVideoTag = UIImageView()
     let btnSelect = UIButton.init(type: .custom)
     var assetModel: ZKAssetModel? {
         didSet {
-            self.btnSelect.setImage(self.assetModel?.picker.config.selectTagImageN, for: .normal)
-            self.btnSelect.setImage(self.assetModel?.picker.config.selectTagImageS, for: .selected)
-            self.imgvThumb.image = self.assetModel?.defaultImage
-            self.assetModel?.loadThumbImage(result: {
-                [weak self] img, err in
-                self?.imgvThumb.image = img
-            })
-            self.assetModel?.addSelectListener(self)
-            if let photoType = self.assetModel?.photoType {
-                self.lblPhotoTag.text = photoType.desc
-                self.lblPhotoTag.isHidden = photoType == .staticPhoto
+            if let assetModel = assetModel {
+                self.btnSelect.setImage(assetModel.picker.config.selectTagImageN, for: .normal)
+                self.btnSelect.setImage(assetModel.picker.config.selectTagImageS, for: .selected)
+                self.imgvThumb.image = assetModel.defaultImage
+                assetModel.loadThumbImage(result: {
+                    [weak self] img, err in
+                    self?.imgvThumb.image = img
+                })
+                assetModel.addSelectListener(self)
+                self.lblPhotoTag.text = assetModel.assetTypeTag
+                self.lblPhotoTag.isHidden = (assetModel.mediaType == .photo && assetModel.photoType == .staticPhoto)
+                self.imgvVideoTag.isHighlighted = assetModel.mediaType != .video
+                self.imgvVideoTag.image = assetModel.picker.config.videoTagImage
+                self.setNeedsLayout()
             }
         }
     }
@@ -42,10 +46,14 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
         self.lblPhotoTag.textColor = .white
         self.lblPhotoTag.font = .systemFont(ofSize: 10)
         self.lblPhotoTag.textAlignment = .center
-        self.lblPhotoTag.backgroundColor = UIColor.init(white: 1, alpha: 0.3)
+        self.lblPhotoTag.backgroundColor = UIColor.init(white: 0, alpha: 0.3)
         self.lblPhotoTag.layer.cornerRadius = 5
         self.lblPhotoTag.clipsToBounds = true
         self.lblPhotoTag.isHidden = true
+        self.contentView.addSubview(self.imgvVideoTag)
+        self.imgvVideoTag.frame = .init(x: 0, y: 0, width: 30, height: 30)
+        self.imgvVideoTag.layer.cornerRadius = 15
+        self.imgvVideoTag.backgroundColor = .init(white: 0, alpha: 0.3)
     }
     
     required init?(coder: NSCoder) {
@@ -86,6 +94,13 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        if let model = assetModel, model.mediaType == .video {
+            self.imgvVideoTag.isHidden = false
+        }
+        else {
+            self.imgvVideoTag.isHidden = true
+        }
+        self.imgvVideoTag.center = self.contentView.center
         if let config = self.assetModel?.picker.config {
             var rc = self.btnSelect.bounds
             switch config.selectTagPosition {
@@ -116,7 +131,6 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
                 tagrc.origin.y = self.bounds.height - tagrc.height
             }
             self.lblPhotoTag.frame = tagrc
-            
         }
     }
     
@@ -124,4 +138,17 @@ class ZKPhotoCollectionViewCell: UICollectionViewCell, UIGestureRecognizerDelega
         self.setNeedsDisplay()
     }
     
+}
+
+extension ZKAssetModel {
+    var assetTypeTag: String {
+        var tag = ""
+        if self.mediaType == .video {
+            tag = String.init(format: "%02d:%02d", self.videoSeconds / 60, self.videoSeconds % 60)
+        }
+        else if self.mediaType == .photo {
+            tag = self.photoType.desc
+        }
+        return tag
+    }
 }

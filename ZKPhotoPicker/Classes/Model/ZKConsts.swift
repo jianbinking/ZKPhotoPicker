@@ -28,12 +28,13 @@ let kZKPhotoThumbNailSize = CGSize.init(width: 200, height: 200)
     }
     
     var desc: String {
-        switch self {
-        case .photo:
+        if self.contains(.photo) {
             return "照片"
-        case .video:
+        }
+        else if self.contains(.video) {
             return "视频"
-        case .unknown:
+        }
+        else {
             return "未知"
         }
     }

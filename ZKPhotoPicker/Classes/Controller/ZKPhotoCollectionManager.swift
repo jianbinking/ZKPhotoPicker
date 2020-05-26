@@ -12,7 +12,7 @@ import Photos
 class ZKPhotoCollectionManager: NSObject {
     
     let collectionModel: ZKAssetCollectionModel
-    var picker: ZKPhotoPicker {
+    var picker: ZKPhotoPicker? {
         return self.collectionModel.picker
     }
     var assetModels: [ZKAssetModel] = []
@@ -30,12 +30,12 @@ class ZKPhotoCollectionManager: NSObject {
     
     private func startCachingThumbImage() {
         print("开始缓存\(collectionModel.title)")
-        picker.cachingImageManager.startCachingThumbImage(for: self.assetModels.map{$0.asset})
+        picker?.cachingImageManager.startCachingThumbImage(for: self.assetModels.map{$0.asset})
     }
     
     private func stopCachingThumbImage() {
         print("停止缓存\(collectionModel.title)")
-        picker.cachingImageManager.stopCachingThumbImage(for: self.assetModels.map{$0.asset})
+        picker?.cachingImageManager.stopCachingThumbImage(for: self.assetModels.map{$0.asset})
     }
     
     func requestAssets(completion: @escaping () -> Void) {
@@ -43,15 +43,18 @@ class ZKPhotoCollectionManager: NSObject {
             let res = PHAsset.fetchAssets(in: self.collectionModel.collection, options: nil)
             res.enumerateObjects({
                 asset, idx, isStop in
-                if let shouldHide = self.picker.delegate?.photoPicker?(picker: self.picker, assetShouldHide: asset, in: self.collectionModel.collection) {
-                    if shouldHide {
+                if let picker = self.picker {
+                    if let shouldHide = picker.delegate?.photoPicker?(picker: picker, assetShouldHide: asset, in: self.collectionModel.collection) {
+                        if shouldHide {
+                            return
+                        }
+                    }
+                    if !picker.config.mediaType.contains(asset.zkMediaType) {
                         return
                     }
+                    self.assetModels.append(.init(asset: asset, picker: picker))
                 }
-                if asset.zkMediaType != self.picker.config.mediaType {
-                    return
-                }
-                self.assetModels.append(.init(asset: asset, picker: self.picker))
+                
             })
             DispatchQueue.main.async {
                 completion()
@@ -61,7 +64,7 @@ class ZKPhotoCollectionManager: NSObject {
     
     func requestKeyThumbImage(_ result: @escaping (UIImage?, ZKFetchImageFail?) -> Void) {
         if let asset = self.keyAsset {
-            picker.cachingImageManager.getThumbImage(for: asset, result: result)
+            picker?.cachingImageManager.getThumbImage(for: asset, result: result)
         }
         else {
             result(nil, .nilAsset)
