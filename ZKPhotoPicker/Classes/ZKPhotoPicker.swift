@@ -201,7 +201,7 @@ class ZKBaseViewController: UIViewController {
             hud.layer.cornerRadius = 16
             hud.clipsToBounds = true
             let indicator = UIActivityIndicatorView.init(frame: .init(x: 0, y: 0, width: 100, height: 100))
-            indicator.style = .large
+            indicator.style = .whiteLarge
             indicator.hidesWhenStopped = true
             indicator.color = .white
             hud.addSubview(indicator)
